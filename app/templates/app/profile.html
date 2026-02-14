@@ -1,0 +1,921 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔄 Profilni Yangilash | {{ user.username }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========== VARIABLES =========== */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --warning: #fbbf24;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --transition-fast: all 0.2s ease;
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* =========== RESET & BASE =========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            background: linear-gradient(45deg, var(--primary-light), rgba(255,255,255,0.1));
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+        
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -5s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(30px, -50px) rotate(120deg);
+            }
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+        
+        /* =========== MAIN CONTAINER =========== */
+        .profile-container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .profile-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            padding: 40px;
+            box-shadow: var(--shadow-2xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-slow);
+        }
+        
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+        
+        /* =========== HEADER =========== */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .profile-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .profile-subtitle {
+            color: var(--gray-500);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        /* =========== MESSAGES =========== */
+        .messages-container {
+            margin-bottom: 30px;
+        }
+        
+        .message {
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            animation: slideIn 0.5s ease;
+            transform-origin: top;
+        }
+        
+        .message-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .message-error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .message-warning {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .message-info {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+            border-left: 4px solid var(--primary);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* =========== AVATAR SECTION =========== */
+        .avatar-section {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 40px;
+            cursor: pointer;
+        }
+        
+        .avatar-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition-normal);
+        }
+        
+        .avatar-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
+        }
+        
+        .avatar-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 50%, rgba(99, 102, 241, 0.1));
+            border-radius: 50%;
+        }
+        
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-normal);
+        }
+        
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: var(--transition-normal);
+            border-radius: 50%;
+        }
+        
+        .avatar-section:hover .avatar-overlay {
+            opacity: 1;
+        }
+        
+        .avatar-overlay i {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .avatar-overlay span {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .avatar-label {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-normal);
+        }
+        
+        .avatar-label:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        /* =========== FORM STYLES =========== */
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gray-700);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-label i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--gray-800);
+            background: white;
+            transition: var(--transition-normal);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: var(--light);
+        }
+        
+        .form-input:hover {
+            border-color: var(--primary-light);
+        }
+        
+        .form-input:disabled {
+            background: var(--gray-100);
+            color: var(--gray-500);
+            cursor: not-allowed;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            pointer-events: none;
+        }
+        
+        /* =========== BUTTONS =========== */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* =========== STATS SECTION =========== */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(16, 185, 129, 0.05));
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-normal);
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+        
+        /* =========== BACK LINK =========== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 25px;
+            background: white;
+            border-radius: var(--radius-lg);
+            transition: var(--transition-normal);
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .back-link:hover {
+            color: white;
+            background: var(--primary);
+            transform: translateX(-5px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        /* =========== RESPONSIVE DESIGN =========== */
+        @media (max-width: 768px) {
+            .profile-container {
+                max-width: 90%;
+            }
+            
+            .profile-card {
+                padding: 30px 25px;
+            }
+            
+            .profile-title {
+                font-size: 2rem;
+            }
+            
+            .avatar-section {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                padding: 16px 25px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .profile-card {
+                padding: 25px 20px;
+            }
+            
+            .profile-title {
+                font-size: 1.8rem;
+            }
+            
+            .form-input {
+                padding: 14px 16px;
+            }
+        }
+        
+        /* =========== ANIMATIONS =========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .profile-card {
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .form-group {
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
+    <div class="profile-container">
+        <div class="profile-card">
+            <!-- Header -->
+            <div class="profile-header">
+                <h1 class="profile-title">Profil Tahrirlash</h1>
+                <p class="profile-subtitle">Shaxsiy ma'lumotlaringizni yangilang</p>
+            </div>
+            
+            <!-- Messages -->
+            {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="message message-{{ message.tags }}">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Avatar Section -->
+            <div class="avatar-section">
+                <input type="file" name="avatar" id="avatar" accept="image/*">
+                <div class="avatar-wrapper">
+                    <img id="avatarPreview" 
+                         src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" 
+                         alt="Profil rasmi" 
+                         class="avatar-img">
+                    <div class="avatar-overlay">
+                        <i class="fas fa-camera"></i>
+                        <span>Rasmni o'zgartirish</span>
+                    </div>
+                </div>
+                <label for="avatar" class="avatar-label">
+                    <i class="fas fa-edit"></i>
+                    <span>Avatar yangilash</span>
+                </label>
+            </div>
+            
+            <!-- Stats Section (Agar statistikalar bo'lsa) -->
+            {% if total_spins or total_wins %}
+            <div class="stats-section">
+                <div class="stat-item">
+                    <div class="stat-value">{{ total_spins|default:"0" }}</div>
+                    <div class="stat-label">Aylantirishlar</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ total_wins|default:"0" }}</div>
+                    <div class="stat-label">Yutuqlar</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ win_rate|default:"0"|floatformat:1 }}%</div>
+                    <div class="stat-label">Yutuq foizi</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ user.date_joined|date:"d.m.Y" }}</div>
+                    <div class="stat-label">Ro'yxatdan o'tgan</div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Form -->
+            <form method="POST" enctype="multipart/form-data" class="form">
+                {% csrf_token %}
+                
+                <!-- Username -->
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i>
+                        Foydalanuvchi nomi
+                    </label>
+                    <input type="text" 
+                           name="username" 
+                           id="username" 
+                           value="{{ user.username }}" 
+                           class="form-input"
+                           required>
+                    <div class="input-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                </div>
+                
+                <!-- First Name -->
+                <div class="form-group">
+                    <label for="first_name" class="form-label">
+                        <i class="fas fa-signature"></i>
+                        Ism
+                    </label>
+                    <input type="text" 
+                           name="first_name" 
+                           id="first_name" 
+                           value="{{ user.first_name|default:'' }}" 
+                           class="form-input"
+                           placeholder="Ismingizni kiriting">
+                    <div class="input-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+                
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label for="last_name" class="form-label">
+                        <i class="fas fa-signature"></i>
+                        Familiya
+                    </label>
+                    <input type="text" 
+                           name="last_name" 
+                           id="last_name" 
+                           value="{{ user.last_name|default:'' }}" 
+                           class="form-input"
+                           placeholder="Familiyangizni kiriting">
+                    <div class="input-icon">
+                        <i class="fas fa-user-tag"></i>
+                    </div>
+                </div>
+                
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Email manzil
+                    </label>
+                    <input type="email" 
+                           name="email" 
+                           id="email" 
+                           value="{{ user.email }}" 
+                           class="form-input"
+                           required
+                           placeholder="email@example.com">
+                    <div class="input-icon">
+                        <i class="fas fa-at"></i>
+                    </div>
+                </div>
+                
+                <!-- Phone -->
+                <div class="form-group">
+                    <label for="phone" class="form-label">
+                        <i class="fas fa-phone"></i>
+                        Telefon raqami
+                    </label>
+                    <input type="tel" 
+                           name="phone" 
+                           id="phone" 
+                           value="{{ user.profile.phone|default:'' }}" 
+                           class="form-input"
+                           placeholder="+998 XX XXX XX XX"
+                           pattern="[+]{1}[0-9]{12}">
+                    <div class="input-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Ma'lumotlarni Saqlash
+                </button>
+            </form>
+            
+            <!-- Back Link -->
+            <a href="{% url 'index' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Asosiy sahifaga qaytish
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Avatar Preview
+        const avatarInput = document.getElementById('avatar');
+        const avatarPreview = document.getElementById('avatarPreview');
+        
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                    
+                    // Add animation effect
+                    avatarPreview.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        avatarPreview.style.transform = 'scale(1)';
+                    }, 300);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const phoneInput = document.getElementById('phone');
+            const phoneValue = phoneInput.value.trim();
+            
+            if (phoneValue && !/^\+[0-9]{12}$/.test(phoneValue)) {
+                e.preventDefault();
+                alert('Iltimos, telefon raqamini toʻgʻri formatda kiriting: +998901234567');
+                phoneInput.focus();
+                phoneInput.style.borderColor = 'var(--danger)';
+                return false;
+            }
+            
+            return true;
+        });
+        
+        // Input focus effects
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Add character counter for text inputs
+        inputs.forEach(input => {
+            if (input.type === 'text' || input.type === 'textarea') {
+                input.addEventListener('input', function() {
+                    const maxLength = this.maxLength || 100;
+                    const currentLength = this.value.length;
+                    const counter = this.parentElement.querySelector('.char-counter') || 
+                                    document.createElement('div');
+                    
+                    if (!counter.classList.contains('char-counter')) {
+                        counter.className = 'char-counter';
+                        counter.style.cssText = `
+                            position: absolute;
+                            right: 20px;
+                            bottom: -20px;
+                            font-size: 0.8rem;
+                            color: var(--gray-500);
+                        `;
+                        this.parentElement.style.position = 'relative';
+                        this.parentElement.appendChild(counter);
+                    }
+                    
+                    counter.textContent = `${currentLength}/${maxLength}`;
+                    
+                    if (currentLength > maxLength * 0.8) {
+                        counter.style.color = 'var(--warning)';
+                    } else {
+                        counter.style.color = 'var(--gray-500)';
+                    }
+                });
+            }
+        });
+        
+        // Page load animation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // Add particles on mouse move
+            document.addEventListener('mousemove', function(e) {
+                if (Math.random() > 0.7) {
+                    createParticle(e.clientX, e.clientY);
+                }
+            });
+        });
+        
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: var(--primary-light);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                top: ${y}px;
+                left: ${x}px;
+                animation: particleAnimation 1s ease forwards;
+            `;
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 1000);
+        }
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes particleAnimation {
+                0% {
+                    transform: translate(0, 0) scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(0);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>

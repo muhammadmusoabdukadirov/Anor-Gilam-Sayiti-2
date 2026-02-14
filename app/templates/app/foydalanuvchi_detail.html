@@ -1,0 +1,730 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }} | Yutuqlar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #1abc9c;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* BACK BUTTON */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #2c3e50;
+            transform: translateX(-5px);
+        }
+        
+        /* USER PROFILE */
+        .profile-header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .profile-meta {
+            color: #666;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .profile-meta i {
+            color: var(--primary);
+            width: 20px;
+        }
+        
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+        
+        .stat-card:nth-child(1)::before { background: var(--primary); }
+        .stat-card:nth-child(2)::before { background: var(--accent); }
+        .stat-card:nth-child(3)::before { background: var(--warning); }
+        .stat-card:nth-child(4)::before { background: var(--danger); }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2rem;
+            opacity: 0.2;
+        }
+        
+        /* YUTUQLAR TABLE */
+        .yutuqlar-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .section-header {
+            background: var(--secondary);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .yutuqlar-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .yutuqlar-table thead {
+            background: #f8f9fa;
+        }
+        
+        .yutuqlar-table th {
+            padding: 15px 20px;
+            text-align: left;
+            color: var(--dark);
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .yutuqlar-table tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .yutuqlar-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .yutuqlar-table td {
+            padding: 15px 20px;
+        }
+        
+        .yutuq-sovga {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .sovga-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        
+        .sovga-info h4 {
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .sovga-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-won {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-lost {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-used {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-mark-used {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-mark-used:hover {
+            background: #2980b9;
+        }
+        
+        .btn-edit {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background: #16a085;
+        }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .btn-save {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .btn-cancel {
+            background: #eee;
+            color: #666;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-meta {
+                justify-content: center;
+            }
+            
+            .yutuqlar-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- BACK BUTTON -->
+        <a href="{% url 'foydalanuvchilar_list' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Foydalanuvchilar ro'yxatiga qaytish
+        </a>
+        
+        <!-- USER PROFILE -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ user.username|first|upper }}
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name">
+                    {% if user.first_name or user.last_name %}
+                        {{ user.first_name }} {{ user.last_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                </h1>
+                <div class="profile-meta">
+                    <i class="fas fa-user"></i>
+                    <span>@{{ user.username }}</span>
+                </div>
+                <div class="profile-meta">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ user.email }}</span>
+                </div>
+                <div class="profile-meta">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Ro'yxatdan o'tgan: {{ user.date_joined|date:"d.m.Y" }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                <div class="stat-value">{{ total_spins }}</div>
+                <div class="stat-label">Jami aylantirishlar</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                <div class="stat-value">{{ total_wins }}</div>
+                <div class="stat-label">Yutgan sovg'alar</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-value">{{ win_rate|floatformat:1 }}%</div>
+                <div class="stat-label">Yutuq foizi</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-value">{{ total_used }}</div>
+                <div class="stat-label">Ishlatilgan yutuqlar</div>
+            </div>
+        </div>
+        
+        <!-- YUTUQLAR -->
+        <div class="yutuqlar-container">
+            <div class="section-header">
+                <h2><i class="fas fa-gifts"></i> Yutuqlar tarixi</h2>
+                <span>{{ yutuqlar.count }} ta yutuq</span>
+            </div>
+            
+            {% if yutuqlar %}
+                <table class="yutuqlar-table">
+                    <thead>
+                        <tr>
+                            <th>Sovg'a</th>
+                            <th>Vaqt</th>
+                            <th>Holat</th>
+                            <th>Harakatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for yutuq in yutuqlar %}
+                            <tr>
+                                <td>
+                                    {% if yutuq.sovga %}
+                                        <div class="yutuq-sovga">
+                                            <div class="sovga-color" style="background: {{ yutuq.sovga.rangi }};"></div>
+                                            <div class="sovga-info">
+                                                <h4>{{ yutuq.sovga.nomi }}</h4>
+                                                <p>Katak №{{ yutuq.sovga.katak_raqami }}</p>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="yutuq-sovga">
+                                            <div class="sovga-color" style="background: #ccc;"></div>
+                                            <div class="sovga-info">
+                                                <h4>Yutuq yo'q</h4>
+                                                <p>Bo'sh katak</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ yutuq.spin_vaqti|date:"d.m.Y H:i" }}
+                                    {% if yutuq.ishlatilgan_vaqt %}
+                                        <br>
+                                        <small style="color: #666;">Ishlatilgan: {{ yutuq.ishlatilgan_vaqt|date:"d.m.Y H:i" }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if yutuq.yutib_oldingi %}
+                                        {% if yutuq.ishlatildi %}
+                                            <span class="status-badge status-used">
+                                                <i class="fas fa-check"></i> Ishlatilgan
+                                            </span>
+                                        {% else %}
+                                            <span class="status-badge status-won">
+                                                <i class="fas fa-trophy"></i> Yutildi
+                                            </span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="status-badge status-lost">
+                                            <i class="fas fa-times"></i> Yutilmadi
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        {% if yutuq.yutib_oldingi and not yutuq.ishlatildi %}
+                                            <button class="action-btn btn-mark-used" onclick="markAsUsed({{ yutuq.id }})">
+                                                <i class="fas fa-check"></i> Ishlatilgan
+                                            </button>
+                                        {% endif %}
+                                        <button class="action-btn btn-edit" onclick="editYutuq({{ yutuq.id }})">
+                                            <i class="fas fa-edit"></i> Tahrirlash
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h3>Yutuqlar topilmadi</h3>
+                    <p>Bu foydalanuvchi hali barabanni aylantirmagan.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- EDIT MODAL -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Yutuqni tahrirlash</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="editForm" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="izoh">Izoh</label>
+                        <textarea id="izoh" name="izoh" class="form-control" rows="4" placeholder="Qo'shimcha izoh..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="ishlatildi" name="ishlatildi">
+                            Ishlatilgan deb belgilash
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Bekor qilish</button>
+                    <button type="submit" class="btn-save">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        let currentYutuqId = null;
+        
+        function markAsUsed(yutuqId) {
+            if (confirm("Bu yutuqni ishlatilgan deb belgilamoqchimisiz?")) {
+                fetch(`/admin/mark-used/${yutuqId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `csrfmiddlewaretoken=${getCookie('csrftoken')}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Yutuq ishlatilgan deb belgilandi!');
+                        location.reload();
+                    } else {
+                        alert('Xatolik: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Xatolik:', error);
+                    alert('Server bilan aloqa xatosi');
+                });
+            }
+        }
+        
+        function editYutuq(yutuqId) {
+            currentYutuqId = yutuqId;
+            document.getElementById('editModal').style.display = 'flex';
+            
+            // Formani to'ldirish
+            fetch(`/admin/get-yutuq/${yutuqId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('izoh').value = data.izoh || '';
+                        document.getElementById('ishlatildi').checked = data.ishlatildi || false;
+                    }
+                });
+        }
+        
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            currentYutuqId = null;
+        }
+        
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            formData.append('yutuq_id', currentYutuqId);
+            
+            fetch('/admin/update-yutuq/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Yutuq muvaffaqiyatli yangilandi!');
+                    closeModal();
+                    location.reload();
+                } else {
+                    alert('Xatolik: ' + data.error);
+                }
+            });
+        });
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Modal tashqarisini bosganda yopish
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

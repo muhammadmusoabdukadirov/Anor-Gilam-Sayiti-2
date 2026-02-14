@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<title>Anor Sharhlar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ================== ROOT ================== */
+:root {
+    --anor-dark: #2b0000;
+    --anor-main: #8b0000;
+    --anor-red: #c1121f;
+    --anor-light: #ff4d4d;
+    --glass: rgba(255,255,255,0.08);
+}
+
+/* ================== BODY ================== */
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, var(--anor-light), var(--anor-main), var(--anor-dark));
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* ================== BACK BUTTON ================== */
+.back-home {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    z-index: 1000;
+}
+
+.back-btn {
+    padding: 13px 30px;
+    border-radius: 40px;
+    background: linear-gradient(135deg, rgba(255, 77, 77, 0.2), rgba(139, 0, 0, 0.3));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.back-btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.6s;
+}
+
+.back-btn:hover:before {
+    left: 100%;
+}
+
+.back-btn:hover {
+    transform: translateX(-8px) scale(1.05);
+    background: linear-gradient(135deg, rgba(255, 77, 77, 0.3), rgba(139, 0, 0, 0.4));
+    border-color: rgba(255, 77, 77, 0.5);
+    box-shadow: 0 15px 40px rgba(255, 0, 0, 0.4);
+}
+
+.back-btn:active {
+    transform: translateX(-4px) scale(0.98);
+}
+
+/* ANOR SPARKLE EFFECT ON HOVER */
+.back-btn:after {
+    content: '🍎';
+    position: absolute;
+    opacity: 0;
+    transition: all 0.3s;
+    right: -20px;
+}
+
+.back-btn:hover:after {
+    opacity: 1;
+    right: 10px;
+    animation: sparkle 0.5s ease;
+}
+
+@keyframes sparkle {
+    0% { transform: scale(0) rotate(0deg); }
+    70% { transform: scale(1.3) rotate(20deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .back-home {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .back-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ================== FLOATING ANOR SPARKS ================== */
+.particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(#ffb3b3 1px, transparent 1px),
+        radial-gradient(#ff4d4d 1px, transparent 1px);
+    background-size: 35px 35px, 70px 70px;
+    animation: float 30s linear infinite;
+    opacity: .3;
+}
+@keyframes float {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-1200px); }
+}
+
+/* ================== CONTAINER ================== */
+.container {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: auto;
+    padding: 50px 20px;
+}
+
+/* ================== HEADER ================== */
+.header {
+    text-align: center;
+    padding: 60px 30px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, rgba(255,0,0,.25), rgba(0,0,0,.5));
+    backdrop-filter: blur(15px);
+    animation: drop 1.2s ease;
+    position: relative;
+    margin-top: 20px;
+}
+
+@keyframes drop {
+    from { transform: translateY(-80px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+
+.header h1 {
+    font-size: 3.2rem;
+    background: linear-gradient(to right, #fff, #ffb3b3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.header p {
+    max-width: 650px;
+    margin: 15px auto 0;
+    opacity: .9;
+}
+
+/* ================== BUTTONS ================== */
+.btn {
+    margin-top: 25px;
+    padding: 15px 35px;
+    border-radius: 40px;
+    background: linear-gradient(135deg, var(--anor-red), var(--anor-main));
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255,0,0,.7);
+    transition: .3s;
+    position: relative;
+    overflow: hidden;
+}
+.btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 50px rgba(255,80,80,1);
+}
+
+/* ================== FORM ================== */
+.form {
+    margin-top: 50px;
+    background: var(--glass);
+    backdrop-filter: blur(18px);
+    padding: 35px;
+    border-radius: 30px;
+    animation: pop .9s ease;
+}
+@keyframes pop {
+    from { transform: scale(.85); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+textarea {
+    width: 100%;
+    border-radius: 20px;
+    border: none;
+    padding: 18px;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+}
+
+/* ================== STARS ================== */
+.stars {
+    display: flex;
+    gap: 10px;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+.stars i {
+    cursor: pointer;
+    color: rgba(255,255,255,.4);
+    transition: .2s;
+}
+.stars i.active,
+.stars i:hover {
+    color: #ffd166;
+    transform: scale(1.3);
+}
+
+/* ================== REVIEW CARDS ================== */
+.review {
+    margin-top: 30px;
+    padding: 25px;
+    border-radius: 25px;
+    background: rgba(0,0,0,.35);
+    backdrop-filter: blur(15px);
+    animation: rise .8s ease;
+    transition: .3s;
+    position: relative;
+}
+.review:hover {
+    transform: translateY(-12px);
+}
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================== ANOR BURST ================== */
+.anor {
+    position: absolute;
+    font-size: 20px;
+    animation: burst 1s linear forwards;
+    pointer-events: none;
+    z-index: 1000;
+}
+@keyframes burst {
+    to {
+        transform: translateY(-80px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* ================== ANOR udalit taxrirlash ================== */
+.review-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px 18px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #fff;
+    transition: 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* EDIT */
+.edit-btn {
+    background: linear-gradient(135deg, #ff7a18, #ffb347);
+    box-shadow: 0 0 18px rgba(255, 160, 0, 0.7);
+}
+
+.edit-btn:hover {
+    transform: scale(1.12) rotate(-1deg);
+    box-shadow: 0 0 35px rgba(255, 200, 80, 1);
+}
+
+/* DELETE */
+.delete-btn {
+    background: linear-gradient(135deg, #8b0000, #ff1a1a);
+    box-shadow: 0 0 18px rgba(255, 0, 0, 0.7);
+}
+
+.delete-btn:hover {
+    transform: scale(1.12) rotate(1deg);
+    box-shadow: 0 0 40px rgba(255, 80, 80, 1);
+}
+
+/* USER INFO */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--anor-red), var(--anor-main));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.user-details h4 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.user-details span {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* RATING STARS IN REVIEW */
+.review-rating {
+    color: #ffd166;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.review-content {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.review-date {
+    margin-top: 15px;
+    opacity: 0.7;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* STATS SECTION */
+.stats-section {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px 0;
+    padding: 30px;
+    background: rgba(0,0,0,.25);
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-box {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #ffb3b3, #ffd166);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 60px 30px;
+    opacity: 0.7;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+/* MESSAGES */
+.message {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    padding: 15px 25px;
+    border-radius: 15px;
+    background: rgba(0,0,0,.7);
+    backdrop-filter: blur(15px);
+    z-index: 10000;
+    animation: slideIn 0.5s ease;
+    display: none;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.success {
+    border-left: 5px solid #2ecc71;
+}
+
+.error {
+    border-left: 5px solid #e74c3c;
+}
+
+/* RATING SLIDER */
+.rating-slider-container {
+    margin-bottom: 25px;
+}
+
+.rating-value {
+    text-align: center;
+    font-size: 1.8rem;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.slider {
+    width: 100%;
+    height: 10px;
+    -webkit-appearance: none;
+    background: linear-gradient(to right, rgba(255,255,255,.1), #ffd166);
+    border-radius: 10px;
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--anor-red);
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 0 15px rgba(255,0,0,.7);
+}
+</style>
+</head>
+
+<body>
+<div class="particles"></div>
+
+<!-- ORTGA QAYTISH TUGMASI -->
+<div class="back-home">
+    <a href="{% url 'index' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span>Bosh sahifa</span>
+    </a>
+</div>
+
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <h1>🍎 Anor Sharhlari</h1>
+        <p>Sharh qoldiring — sifati anordek yorqin, fikri anordek toza bo'lsin.</p>
+        
+        {% if not request.user.is_authenticated %}
+            <a href="{% url 'boshqaruv' %}" class="btn">
+                <i class="fas fa-sign-in-alt"></i> Kirish / Ro'yxatdan o'tish
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="stats-section">
+        <div class="stat-box">
+            <div class="stat-number">{{ stats.average|default:"0.0"|floatformat:1 }}</div>
+            <div class="stat-label">O'rtacha baho</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ stats.total|default:0 }}</div>
+            <div class="stat-label">Jami sharhlar</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ reviews.count }}</div>
+            <div class="stat-label">Ko'rsatilmoqda</div>
+        </div>
+    </div>
+
+    <!-- ADD REVIEW FORM -->
+    {% if request.user.is_authenticated %}
+        {% if not user_review %}
+            <div class="form">
+                <h3 style="text-align: center; margin-bottom: 25px;">
+                    <i class="fas fa-pen"></i> Sharh qoldiring
+                </h3>
+                
+                <form id="reviewForm" method="POST" action="{% url 'add_review' %}">
+                    {% csrf_token %}
+                    
+                    <div class="rating-slider-container">
+                        <div class="stars" id="stars">
+                            {% for i in "12345" %}
+                                <i class="fas fa-star" data-value="{{ i }}"></i>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="rating-value" id="ratingValue">5.0</div>
+                        
+                        <input type="range" name="rating" id="ratingSlider" 
+                               class="slider" min="1" max="5" step="0.5" value="5">
+                    </div>
+                    
+                    <textarea name="comment" rows="4" 
+                              placeholder="Anordek shirin fikringizni yozing... (ixtiyoriy)"></textarea>
+                    
+                    <button type="submit" class="btn" onclick="anarBoom()">
+                        <i class="fas fa-paper-plane"></i> Sharhni yuborish
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div class="form" style="text-align: center; padding: 40px;">
+                <i class="fas fa-check-circle" style="font-size: 3rem; color: #ffd166; margin-bottom: 15px;"></i>
+                <h3>Siz allaqachon sharh qoldirgansiz!</h3>
+                <p style="opacity: 0.8; margin: 10px 0 25px;">
+                    Siz {{ user_review.rating }} yulduz bilan baholagansiz
+                </p>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="form" style="text-align: center; padding: 40px;">
+            <i class="fas fa-user-lock" style="font-size: 3rem; color: var(--anor-light); margin-bottom: 15px;"></i>
+            <h3>Sharh qoldirish uchun tizimga kiring</h3>
+            <p style="opacity: 0.8; margin: 15px 0 25px;">
+                Fikringizni bildirish uchun iltimos, akkauntingizga kiring yoki ro'yxatdan o'ting
+            </p>
+            <a href="{% url 'boshqaruv' %}" class="btn">
+                <i class="fas fa-sign-in-alt"></i> Kirish / Ro'yxatdan o'tish
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- REVIEWS LIST -->
+    <h2 style="text-align: center; margin: 60px 0 30px; font-size: 2.2rem;">
+        <i class="fas fa-comments"></i> Barcha Sharhlar
+    </h2>
+    
+    {% if reviews %}
+        {% for review in reviews %}
+            <div class="review">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        {{ review.user.username|first|upper }}
+                    </div>
+                    <div class="user-details">
+                        <h4>
+                            {% if review.user.first_name or review.user.last_name %}
+                                {{ review.user.first_name }} {{ review.user.last_name }}
+                            {% else %}
+                                {{ review.user.username }}
+                            {% endif %}
+                        </h4>
+                        <span>{{ review.created_at|date:"d.m.Y H:i" }}</span>
+                    </div>
+                </div>
+                
+                <div class="review-rating">
+                    {% with rating=review.rating %}
+                        {% for i in "12345" %}
+                            {% if i|add:"0" <= rating %}
+                                <i class="fas fa-star"></i>
+                            {% elif i|add:"-0.5" <= rating %}
+                                <i class="fas fa-star-half-alt"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+                    <span style="margin-left: 10px; font-size: 1.2rem;">{{ review.rating }}</span>
+                </div>
+                
+                <div class="review-content">
+                    {{ review.comment|linebreaks }}
+                </div>
+                
+                <div class="review-date">
+                    <i class="far fa-clock"></i>
+                    {{ review.created_at|timesince }} oldin
+                </div>
+                
+                {% if request.user == review.user %}
+                    <div class="review-actions">
+                        <button class="action-btn edit-btn" onclick="editReview({{ review.id }})">
+                            <i class="fas fa-edit"></i> Tahrirlash
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteReview({{ review.id }})">
+                            <i class="fas fa-trash"></i> O'chirish
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="far fa-comment-dots"></i>
+            <h3>Hozircha sharhlar yo'q</h3>
+            <p>Birinchi sharh qoldiruvchi siz bo'ling!</p>
+        </div>
+    {% endif %}
+
+</div>
+
+<!-- MESSAGE TOAST -->
+<div class="message" id="messageToast"></div>
+
+<!-- EDIT MODAL -->
+<div class="modal" id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center;">
+    <div style="background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); padding: 40px; border-radius: 30px; max-width: 500px; width: 90%;">
+        <h2 style="text-align: center; margin-bottom: 30px;">
+            <i class="fas fa-edit"></i> Sharhni tahrirlash
+        </h2>
+        
+        <form id="editForm">
+            {% csrf_token %}
+            
+            <div class="rating-slider-container">
+                <div class="stars" id="editStars">
+                    {% for i in "12345" %}
+                        <i class="fas fa-star" data-value="{{ i }}"></i>
+                    {% endfor %}
+                </div>
+                
+                <div class="rating-value" id="editRatingValue">5.0</div>
+                
+                <input type="range" name="rating" id="editRatingSlider" 
+                       class="slider" min="1" max="5" step="0.5" value="5">
+            </div>
+            
+            <textarea name="comment" id="editComment" rows="4" 
+                      placeholder="Sharhingizni yozing..."></textarea>
+            
+            <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button type="button" class="action-btn" onclick="closeEditModal()" 
+                        style="background: rgba(255,255,255,0.1);">
+                    <i class="fas fa-times"></i> Bekor qilish
+                </button>
+                <button type="submit" class="btn">
+                    <i class="fas fa-save"></i> Saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Star rating functionality
+function setupStars(starsContainerId, sliderId, valueId) {
+    const stars = document.querySelectorAll(`#${starsContainerId} i`);
+    const slider = document.getElementById(sliderId);
+    const valueDisplay = document.getElementById(valueId);
+    
+    // Click stars
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const value = parseFloat(this.getAttribute('data-value'));
+            slider.value = value;
+            valueDisplay.textContent = value.toFixed(1);
+            updateStars(stars, value);
+        });
+    });
+    
+    // Move slider
+    slider.addEventListener('input', function() {
+        const value = parseFloat(this.value);
+        valueDisplay.textContent = value.toFixed(1);
+        updateStars(stars, value);
+    });
+    
+    function updateStars(stars, rating) {
+        stars.forEach(star => {
+            const starValue = parseFloat(star.getAttribute('data-value'));
+            star.classList.remove('fas', 'far', 'fa-star-half-alt');
+            
+            if (starValue <= rating) {
+                star.className = 'fas fa-star active';
+            } else if (starValue - 0.5 <= rating) {
+                star.className = 'fas fa-star-half-alt active';
+            } else {
+                star.className = 'far fa-star';
+            }
+        });
+    }
+    
+    // Initial update
+    updateStars(stars, parseFloat(slider.value));
+}
+
+// ANOR BURST EFFECT
+function anarBoom(x = null, y = null, count = 20) {
+    for (let i = 0; i < count; i++) {
+        let a = document.createElement('div');
+        a.className = 'anor';
+        a.innerText = '🍎';
+        a.style.left = (x || Math.random() * window.innerWidth) + 'px';
+        a.style.top = (y || window.innerHeight - 100) + 'px';
+        document.body.appendChild(a);
+        setTimeout(() => a.remove(), 1000);
+    }
+}
+
+// MESSAGE TOAST
+function showMessage(message, type = 'success') {
+    const toast = document.getElementById('messageToast');
+    toast.textContent = message;
+    toast.className = `message ${type}`;
+    toast.style.display = 'block';
+    
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 4000);
+}
+
+// EDIT MODAL
+let currentReviewId = null;
+
+function editReview(reviewId) {
+    currentReviewId = reviewId;
+    document.getElementById('editModal').style.display = 'flex';
+    
+    // Fetch review data
+    fetch(`/api/get-review/${reviewId}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('editRatingSlider').value = data.review.rating;
+                document.getElementById('editRatingValue').textContent = data.review.rating;
+                document.getElementById('editComment').value = data.review.comment;
+                
+                // Update stars
+                setupStars('editStars', 'editRatingSlider', 'editRatingValue');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('Xatolik yuz berdi!', 'error');
+        });
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+    currentReviewId = null;
+}
+
+// DELETE REVIEW
+function deleteReview(reviewId) {
+    if (confirm("Haqiqatan ham bu sharhni o'chirmoqchimisiz?")) {
+        fetch(`/api/delete-review/${reviewId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `csrfmiddlewaretoken=${document.querySelector('[name=csrfmiddlewaretoken]').value}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage('Sharh o\'chirildi!', 'success');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showMessage(data.error, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('Server xatosi!', 'error');
+        });
+    }
+}
+
+// SUBMIT REVIEW FORM
+document.getElementById('reviewForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch(this.action, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMessage(data.message, 'success');
+            anarBoom(); // Anor burst effect
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showMessage(data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('Server xatosi!', 'error');
+    });
+});
+
+// SUBMIT EDIT FORM
+document.getElementById('editForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    formData.append('review_id', currentReviewId);
+    
+    fetch(`/api/edit-review/${currentReviewId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMessage('Sharh muvaffaqiyatli yangilandi!', 'success');
+            closeEditModal();
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showMessage(data.error, 'error');
+        }
+    });
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    setupStars('stars', 'ratingSlider', 'ratingValue');
+    
+    // Button animation
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => this.style.transform = '', 120);
+            
+            if (this.classList.contains('delete-btn')) {
+                anarBoom(e.clientX, e.clientY, 10);
+            }
+        });
+    });
+    
+    // Close modal on outside click
+    document.getElementById('editModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
+    });
+});
+</script>
+</body>
+</html>

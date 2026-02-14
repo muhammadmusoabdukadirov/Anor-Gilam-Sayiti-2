@@ -1,0 +1,524 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovg'alarni Boshqarish</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4ECDC4;
+            --secondary: #FF6B6B;
+            --accent: #FFD166;
+            --dark: #2D3047;
+            --light: #F7FFF7;
+            --success: #06D6A0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, #1a1c2f 100%);
+            min-height: 100vh;
+            color: var(--light);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ALERT MESSAGES */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert-success {
+            background: rgba(6, 214, 160, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .alert-error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        /* MAIN CONTENT */
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        /* FORM SECTION */
+        .form-section {
+            flex: 1;
+            min-width: 400px;
+        }
+        
+        .form-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+        }
+        
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+        }
+        
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.4);
+        }
+        
+        /* STATUS CARD */
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .status-value {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        /* SOVG'A LIST SECTION */
+        .list-section {
+            flex: 1;
+            min-width: 400px;
+        }
+        
+        .sovga-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .sovga-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .sovga-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+        }
+        
+        .sovga-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .sovga-katak {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .sovga-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--light);
+        }
+        
+        .sovga-foiz {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .delete-form {
+            margin-top: 15px;
+        }
+        
+        .delete-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            .form-section, .list-section {
+                min-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .sovga-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1><i class="fas fa-gifts"></i> Sovg'alarni Boshqarish</h1>
+            <p>Baraban uchun sovg'alarni qo'shing, o'zgartiring yoki o'chiring. Maksimal 10 ta sovg'a</p>
+        </div>
+        
+        <!-- MESSAGES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- MAIN CONTENT -->
+        <div class="content-wrapper">
+            <!-- FORM SECTION -->
+            <div class="form-section">
+                <!-- ADD FORM -->
+                <div class="form-card">
+                    <h2 class="form-title"><i class="fas fa-plus-circle"></i> Yangi Sovg'a Qo'shish</h2>
+                    
+                    <form method="POST" action="{% url 'sovga_management' %}">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="nomi">Sovg'a nomi</label>
+                            <input type="text" id="nomi" name="nomi" class="form-control" placeholder="Misol: iPhone 15 Pro" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="foiz">Ehtimollik (%)</label>
+                            <input type="number" id="foiz" name="foiz" class="form-control" min="1" max="100" value="10" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="katak_raqami">Katak raqami (1-10)</label>
+                            <select id="katak_raqami" name="katak_raqami" class="form-control form-select" required>
+                                <option value="">Katak tanlang</option>
+                                {% for katak in available_kids %}
+                                    <option value="{{ katak }}">Katak {{ katak }} - Bo'sh</option>
+                                {% endfor %}
+                                {% for katak in occupied_kids %}
+                                    <option value="{{ katak }}" disabled>Katak {{ katak }} - Band</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="rangi">Rangi</label>
+                            <input type="color" id="rangi" name="rangi" class="form-control" value="#3498db" style="height: 50px;">
+                            <div class="color-preview" id="colorPreview" style="background: #3498db;"></div>
+                        </div>
+                        
+                        <button type="submit" name="add_sovga" class="submit-btn">
+                            <i class="fas fa-save"></i> Sovg'ani Qo'shish
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- STATUS -->
+                <div class="status-card">
+                    <h2 class="form-title"><i class="fas fa-chart-pie"></i> Holat</h2>
+                    
+                    <div class="status-item">
+                        <span class="status-label">Jami sovg'alar:</span>
+                        <span class="status-value">{{ sovgalar.count }} / 10</span>
+                    </div>
+                    
+                    <div class="status-item">
+                        <span class="status-label">Foizlar yig'indisi:</span>
+                        <span class="status-value">{{ total_percentage }}%</span>
+                    </div>
+                    
+                    <div class="status-item">
+                        <span class="status-label">Qolgan foiz:</span>
+                        <span class="status-value">{{ remaining_percentage }}%</span>
+                    </div>
+                    
+                    <div class="status-item">
+                        <span class="status-label">Bo'sh kataklar:</span>
+                        <span class="status-value">{{ available_kids|join:", " }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SOVG'A LIST -->
+            <div class="list-section">
+                <div class="form-card">
+                    <h2 class="form-title"><i class="fas fa-list-ul"></i> Mavjud Sovg'alar</h2>
+                    
+                    {% if sovgalar %}
+                        <div class="sovga-list">
+                            {% for sovga in sovgalar %}
+                                <div class="sovga-card">
+                                    <div class="sovga-header">
+                                        <div class="sovga-katak" style="background: {{ sovga.rangi }};">
+                                            {{ sovga.katak_raqami }}
+                                        </div>
+                                        <span class="sovga-foiz">{{ sovga.foiz }}%</span>
+                                    </div>
+                                    
+                                    <h3 class="sovga-name">{{ sovga.nomi }}</h3>
+                                    
+                                    <div style="margin: 15px 0; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                        <small style="color: rgba(255,255,255,0.6);">Rang:</small>
+                                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                                            <div style="width: 30px; height: 30px; border-radius: 5px; background: {{ sovga.rangi }}; border: 1px solid rgba(255,255,255,0.3);"></div>
+                                            <code style="color: rgba(255,255,255,0.8);">{{ sovga.rangi }}</code>
+                                        </div>
+                                    </div>
+                                    
+                                    <form method="POST" action="{% url 'sovga_management' %}" class="delete-form" onsubmit="return confirm('{{ sovga.nomi }} sovg\'asini o\'chirishni istaysizmi?')">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="sovga_id" value="{{ sovga.id }}">
+                                        <button type="submit" class="delete-btn">
+                                            <i class="fas fa-trash-alt"></i> O'chirish
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <h3>Hozircha sovg'alar mavjud emas</h3>
+                            <p>Yangi sovg'a qo'shish uchun chapdagi formani to'ldiring</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <a href="{% url 'baraban' %}" class="btn">
+                <i class="fas fa-dharmachakra"></i> Barabanni Ko'rish
+            </a>
+            <a href="{% url 'index' %}" class="btn">
+                <i class="fas fa-home"></i> Bosh Sahifa
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Rang tanlaganda preview yangilash
+        document.getElementById('rangi').addEventListener('input', function(e) {
+            document.getElementById('colorPreview').style.background = e.target.value;
+        });
+        
+        // Katak tanlashni o'zgartirish
+        const katakSelect = document.getElementById('katak_raqami');
+        const foizInput = document.getElementById('foiz');
+        const nomiInput = document.getElementById('nomi');
+        
+        // Formani yuborishdan oldin tekshirish
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (katakSelect.value === '') {
+                alert('Iltimos, katak raqamini tanlang!');
+                e.preventDefault();
+                return false;
+            }
+            
+            const foiz = parseInt(foizInput.value);
+            const remaining = parseInt('{{ remaining_percentage }}');
+            
+            if (foiz > remaining) {
+                alert(`Foiz ${foiz}% qolgan foiz ${remaining}% dan katta! Iltimos, foizni kamaytiring.`);
+                e.preventDefault();
+                return false;
+            }
+            
+            if (!nomiInput.value.trim()) {
+                alert('Iltimos, sovg\'a nomini kiriting!');
+                e.preventDefault();
+                return false;
+            }
+            
+            return true;
+        });
+    </script>
+</body>
+</html>

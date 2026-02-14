@@ -1,0 +1,1134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Rasm Galereya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --primary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --neon-pink: #ff00ff;
+            --neon-cyan: #00ffff;
+            --neon-green: #00ff00;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Floating geometric shapes */
+        .shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: floatShape 20s infinite linear;
+        }
+        
+        .shape.triangle {
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        
+        .shape.circle {
+            border-radius: 50%;
+        }
+        
+        .shape.square {
+            transform: rotate(45deg);
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes floatShape {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        
+        /* Glass effect */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* HEADER */
+        .header {
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .header h1 i {
+            animation: pulse 2s infinite;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* ACTION BUTTONS */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 35px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        /* PHOTOS MASONRY GRID */
+        .photos-masonry {
+            column-count: 5;
+            column-gap: 20px;
+            margin-bottom: 50px;
+        }
+        
+        @media (max-width: 1200px) {
+            .photos-masonry { column-count: 4; }
+        }
+        
+        @media (max-width: 900px) {
+            .photos-masonry { column-count: 3; }
+        }
+        
+        @media (max-width: 600px) {
+            .photos-masonry { column-count: 2; }
+        }
+        
+        @media (max-width: 400px) {
+            .photos-masonry { column-count: 1; }
+        }
+        
+        .photo-item {
+            break-inside: avoid;
+            margin-bottom: 20px;
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        
+        .photo-item:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .photo-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+            transition: transform 0.5s;
+        }
+        
+        .photo-item:hover .photo-image {
+            transform: scale(1.1);
+        }
+        
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 20px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .photo-item:hover .photo-overlay {
+            opacity: 1;
+        }
+        
+        .photo-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .photo-meta {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* IMAGE VIEWER MODAL */
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: none;
+        }
+        
+        .viewer-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .viewer-image {
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        /* Suratni kichiklashtirish rejimi */
+        .viewer-image.small-mode {
+            max-width: 50%;
+            max-height: 50%;
+            border: 3px solid var(--neon-cyan);
+            box-shadow: 0 0 30px var(--neon-cyan);
+        }
+        
+        /* Ekranni to'ldirish rejimi */
+        .viewer-image.fullscreen-mode {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .viewer-controls {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 10001;
+            flex-wrap: wrap;
+        }
+        
+        .viewer-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .viewer-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        /* Pastki burchakdagi zoom kontrol */
+        .bottom-zoom-controls {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .zoom-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .zoom-btn:hover {
+            background: var(--primary-gradient);
+            transform: scale(1.1);
+        }
+        
+        .image-info {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* DOWNLOAD OPTIONS */
+        .download-options {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10002;
+        }
+        
+        .download-btn {
+            padding: 12px 25px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* FILTERS */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-gradient);
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* ADMIN ACTIONS */
+        .admin-actions {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .admin-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .admin-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        /* LOAD MORE */
+        .load-more {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .load-more-btn {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .load-more-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* SWIPE INDICATOR */
+        .swipe-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .swipe-indicator {
+                display: flex;
+            }
+            
+            .btn {
+                padding: 15px 25px;
+                font-size: 1rem;
+            }
+            
+            .image-info {
+                left: 10px;
+                right: 10px;
+                bottom: 100px;
+                max-width: none;
+            }
+            
+            .viewer-controls {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .bottom-zoom-controls {
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 15px;
+            }
+            
+            .viewer-image.small-mode {
+                max-width: 70%;
+                max-height: 70%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .photos-masonry {
+                column-gap: 10px;
+            }
+            
+            .admin-actions {
+                flex-direction: column;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .bottom-zoom-controls {
+                bottom: 15px;
+                right: 15px;
+                padding: 8px 12px;
+            }
+            
+            .zoom-btn {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        /* ANIMATIONS */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .photo-item {
+            animation: slideIn 0.6s ease backwards;
+        }
+        
+        /* Zoom rejimlari uchun active holat */
+        .zoom-btn.active {
+            background: var(--primary-gradient);
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Shapes -->
+    <div class="shapes" id="shapes"></div>
+    
+    <!-- Admin Actions -->
+    {% if request.user.is_superuser %}
+    <div class="admin-actions">
+        <a href="{% url 'video_list' %}" class="admin-btn">
+            <i class="fas fa-video"></i> VD
+        </a>
+    </div>
+    {% endif %}
+    
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header glass">
+            <h1><i class="fas fa-camera-retro"></i> Rasm Galereya</h1>
+            <p>ANOR GILAM SAHIFASINI ulashin baham ko'ring hammaga! ✨</p>
+        </div>
+        
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+            <a href="{% url 'video_list' %}" class="btn glass btn-secondary">
+                <i class="fas fa-film"></i> Video Galereyasi
+            </a>
+            <a href="{% url 'index' %}" class="btn glass btn-primary">
+                <i class="fas fa-home"></i> Bosh Sahifa
+            </a>
+        </div>
+        
+        <!-- PHOTOS MASONRY GRID -->
+        <div class="photos-masonry" id="photosGrid">
+            {% for photo in photos %}
+                <div class="photo-item glass" data-photo-id="{{ photo.id }}"
+                     data-photo-url="{{ photo.image.url }}"
+                     data-photo-title="{{ photo.title }}"
+                     data-photo-description="{{ photo.description|default:'' }}"
+                     data-photo-date="{{ photo.created_at|date:'d.m.Y' }}"
+                     data-photo-size="{% if photo.image.width and photo.image.height %}{{ photo.image.width }}x{{ photo.image.height }}{% else %}Unknown{% endif %}"
+                     data-photo-views="{{ photo.views }}"
+                     data-photo-likes="{{ photo.likes }}"
+                     onclick="openImageViewer(this)">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="photo-image">
+                    <div class="photo-overlay">
+                        <div class="photo-title">
+                            <i class="fas fa-image"></i>
+                            {{ photo.title|truncatechars:30 }}
+                        </div>
+                        <div class="photo-meta">
+                            <span><i class="far fa-calendar"></i> {{ photo.created_at|date:"d.m.Y" }}</span>
+                            <span><i class="fas fa-eye"></i> {{ photo.views }}</span>
+                            <span><i class="fas fa-heart"></i> {{ photo.likes }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 80px 40px; color: white;">
+                    <i class="fas fa-images" style="font-size: 4rem; margin-bottom: 20px;"></i>
+                    <h2 style="font-size: 2rem; margin-bottom: 15px;">Rasmlar yo'q 😔</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 30px;">Hozircha hech qanday rasm mavjud emas.</p>
+                    {% if request.user.is_superuser %}
+                        <a href="{% url 'add_photo' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 30px;">
+                            <i class="fas fa-plus-circle"></i> Birinchi rasm qo'shing
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- LOAD MORE BUTTON -->
+        {% if photos.has_next %}
+        <div class="load-more">
+            <button class="load-more-btn glass" onclick="loadMorePhotos()">
+                <i class="fas fa-sync-alt"></i> Ko'proq yuklash
+            </button>
+        </div>
+        {% endif %}
+        
+        <!-- SWIPE INDICATOR -->
+        <div class="swipe-indicator glass">
+            <i class="fas fa-arrows-left-right"></i> Chapga/O'ngga swipe qiling
+        </div>
+    </div>
+    
+    <!-- IMAGE VIEWER MODAL -->
+    <div class="image-viewer glass" id="imageViewer">
+        <div class="viewer-container">
+            <div class="viewer-controls">
+                <div class="viewer-btn" onclick="closeImageViewer()">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="viewer-btn" onclick="downloadImage()">
+                    <i class="fas fa-download"></i>
+                </div>
+                <div class="viewer-btn" onclick="toggleFilters()">
+                    <i class="fas fa-sliders-h"></i>
+                </div>
+                <div class="viewer-btn" onclick="shareImage()">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <div class="viewer-btn" onclick="toggleFullscreen()" id="fullscreenBtn">
+                    <i class="fas fa-expand" id="fullscreenIcon"></i>
+                </div>
+            </div>
+            
+            <img id="viewerImage" src="" alt="" class="viewer-image">
+            
+            <!-- PASTKI BURCHAKDA ZOOM KONTROLLARI (YANGI QO'SHILDI) -->
+            <div class="bottom-zoom-controls glass">
+                <div class="zoom-btn" onclick="setImageMode('small')" title="Kichiklashtirish" id="smallModeBtn">
+                    <i class="fas fa-compress-alt"></i>
+                </div>
+                <div class="zoom-btn" onclick="setImageMode('normal')" title="Normal holat" id="normalModeBtn">
+                    <i class="fas fa-square"></i>
+                </div>
+                <div class="zoom-btn" onclick="setImageMode('fullscreen')" title="Ekranni to'ldirish" id="fullscreenModeBtn">
+                    <i class="fas fa-expand-alt"></i>
+                </div>
+            </div>
+            
+            <div class="image-info glass" id="imageInfo">
+                <h3 id="viewerTitle"></h3>
+                <p id="viewerDescription"></p>
+                <div style="display: flex; gap: 20px; margin-top: 10px; font-size: 0.9rem;">
+                    <span><i class="far fa-calendar"></i> <span id="viewerDate"></span></span>
+                    <span><i class="fas fa-eye"></i> <span id="viewerViews"></span></span>
+                    <span><i class="fas fa-heart"></i> <span id="viewerLikes"></span></span>
+                    <span><i class="fas fa-expand"></i> <span id="viewerSize"></span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DOWNLOAD OPTIONS -->
+    <div class="download-options glass" id="downloadOptions">
+        <button class="download-btn" onclick="downloadImageSize('240')">
+            <i class="fas fa-download"></i> 240p
+        </button>
+        <button class="download-btn" onclick="downloadImageSize('480')">
+            <i class="fas fa-download"></i> 480p
+        </button>
+        <button class="download-btn" onclick="downloadImageSize('720')">
+            <i class="fas fa-download"></i> 720p HD
+        </button>
+        <button class="download-btn" onclick="downloadImageSize('1080')">
+            <i class="fas fa-download"></i> 1080p Full HD
+        </button>
+        <button class="download-btn" onclick="downloadImageSize('2160')">
+            <i class="fas fa-download"></i> 2160p 4K
+        </button>
+        <button class="download-btn" onclick="downloadImageSize('original')">
+            <i class="fas fa-download"></i> Original
+        </button>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></script>
+    <script>
+        // Create floating geometric shapes
+        function createShapes() {
+            const shapesContainer = document.getElementById('shapes');
+            const shapeCount = 20;
+            const shapeTypes = ['triangle', 'circle', 'square'];
+            
+            for (let i = 0; i < shapeCount; i++) {
+                const shape = document.createElement('div');
+                shape.className = `shape ${shapeTypes[Math.floor(Math.random() * shapeTypes.length)]}`;
+                
+                const size = Math.random() * 80 + 20;
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const duration = Math.random() * 25 + 15;
+                const delay = Math.random() * 10;
+                const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.1)`;
+                
+                shape.style.width = `${size}px`;
+                shape.style.height = `${size}px`;
+                shape.style.left = `${x}vw`;
+                shape.style.top = `${y}vh`;
+                shape.style.animationDuration = `${duration}s`;
+                shape.style.animationDelay = `${delay}s`;
+                shape.style.background = color;
+                
+                shapesContainer.appendChild(shape);
+            }
+        }
+        
+        // Variables
+        let currentPhotoIndex = 0;
+        let viewer;
+        const photoItems = Array.from(document.querySelectorAll('.photo-item'));
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createShapes();
+            setupSwipeNavigation();
+            initializeViewer();
+            setActiveMode('normal'); // Boshlang'ich holat normal
+        });
+        
+        // Initialize image viewer
+        function initializeViewer() {
+            const images = Array.from(document.querySelectorAll('.photo-image'));
+            viewer = new Viewer(document.getElementById('photosGrid'), {
+                inline: false,
+                toolbar: {
+                    zoomIn: true,
+                    zoomOut: true,
+                    oneToOne: true,
+                    reset: true,
+                    prev: true,
+                    play: true,
+                    next: true,
+                    rotateLeft: true,
+                    rotateRight: true,
+                    flipHorizontal: true,
+                    flipVertical: true,
+                },
+                viewed() {
+                    const index = this.index;
+                    updateImageInfo(index);
+                }
+            });
+        }
+        
+        // Open image viewer (custom modal)
+        function openImageViewer(photoItem) {
+            const photoUrl = photoItem.dataset.photoUrl;
+            const photoTitle = photoItem.dataset.photoTitle;
+            
+            currentPhotoIndex = photoItems.indexOf(photoItem);
+            
+            // Update modal content
+            document.getElementById('viewerImage').src = photoUrl;
+            updateImageInfo(currentPhotoIndex);
+            
+            // Reset image mode to normal when opening
+            setImageMode('normal');
+            
+            // Show modal
+            document.getElementById('imageViewer').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close image viewer
+        function closeImageViewer() {
+            document.getElementById('imageViewer').style.display = 'none';
+            document.getElementById('downloadOptions').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Update image info in modal
+        function updateImageInfo(index) {
+            const photo = photoItems[index];
+            if (!photo) return;
+            
+            document.getElementById('viewerTitle').textContent = photo.dataset.photoTitle;
+            document.getElementById('viewerDescription').textContent = photo.dataset.photoDescription || 'Tasvir haqida ma\'lumot yo\'q';
+            document.getElementById('viewerDate').textContent = photo.dataset.photoDate;
+            document.getElementById('viewerViews').textContent = photo.dataset.photoViews;
+            document.getElementById('viewerLikes').textContent = photo.dataset.photoLikes;
+            document.getElementById('viewerSize').textContent = photo.dataset.photoSize;
+        }
+        
+        // YANGI FUNKSIYA: Suratni kichiklashtirish, normal va ekranni to'ldirish rejimlari
+        function setImageMode(mode) {
+            const image = document.getElementById('viewerImage');
+            
+            // Remove all mode classes
+            image.classList.remove('small-mode', 'fullscreen-mode');
+            
+            // Add class based on mode
+            switch(mode) {
+                case 'small':
+                    image.classList.add('small-mode');
+                    break;
+                case 'fullscreen':
+                    image.classList.add('fullscreen-mode');
+                    break;
+                case 'normal':
+                default:
+                    // No additional class needed
+                    break;
+            }
+            
+            // Update active button state
+            setActiveMode(mode);
+        }
+        
+        // Active rejimni ko'rsatish
+        function setActiveMode(mode) {
+            // Remove active class from all zoom buttons
+            document.getElementById('smallModeBtn').classList.remove('active');
+            document.getElementById('normalModeBtn').classList.remove('active');
+            document.getElementById('fullscreenModeBtn').classList.remove('active');
+            
+            // Add active class to selected mode
+            if (mode === 'small') {
+                document.getElementById('smallModeBtn').classList.add('active');
+            } else if (mode === 'normal') {
+                document.getElementById('normalModeBtn').classList.add('active');
+            } else if (mode === 'fullscreen') {
+                document.getElementById('fullscreenModeBtn').classList.add('active');
+            }
+        }
+        
+        // Download image
+        function downloadImage() {
+            const downloadOptions = document.getElementById('downloadOptions');
+            downloadOptions.style.display = downloadOptions.style.display === 'flex' ? 'none' : 'flex';
+        }
+        
+        // Download specific size
+        function downloadImageSize(size) {
+            const currentPhoto = photoItems[currentPhotoIndex];
+            const photoUrl = currentPhoto.dataset.photoUrl;
+            const photoTitle = currentPhoto.dataset.photoTitle;
+            
+            let downloadUrl = photoUrl;
+            
+            // In a real app, you would modify the URL based on size
+            // This is just a demo
+            if (size !== 'original') {
+                alert(`"${photoTitle}" rasmi ${size}p sifatida yuklanmoqda...\n(Demo: Faqat original o'lcham yuklanadi)`);
+            }
+            
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = `${photoTitle}_${size}p.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            document.getElementById('downloadOptions').style.display = 'none';
+        }
+        
+        // Share image
+        function shareImage() {
+            const photo = photoItems[currentPhotoIndex];
+            if (navigator.share) {
+                navigator.share({
+                    title: photo.dataset.photoTitle,
+                    text: 'Bu rasmni baham ko\'ring!',
+                    url: photo.dataset.photoUrl,
+                });
+            } else {
+                alert("Share funksiyasi brauzeringizda qo'llab-quvvatlanmaydi. Rasm URL manzili: " + photo.dataset.photoUrl);
+            }
+        }
+        
+        // Apply filters to image
+        function toggleFilters() {
+            const image = document.getElementById('viewerImage');
+            const filters = [
+                'none',
+                'grayscale(100%)',
+                'sepia(100%)',
+                'invert(100%)',
+                'hue-rotate(90deg)',
+                'saturate(200%)',
+                'contrast(200%)',
+                'brightness(150%)'
+            ];
+            
+            let currentFilter = image.style.filter || 'none';
+            let currentIndex = filters.indexOf(currentFilter);
+            let nextIndex = (currentIndex + 1) % filters.length;
+            
+            image.style.filter = filters[nextIndex];
+        }
+        
+        // Filter photos
+        function filterPhotos(filter) {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // In a real app, you would filter photos here
+            // This is just a demo animation
+            photoItems.forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.1}s`;
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 50 + 300);
+            });
+        }
+        
+        // Load more photos
+        function loadMorePhotos() {
+            const btn = document.querySelector('.load-more-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yuklanmoqda...';
+            
+            // Simulate loading
+            setTimeout(() => {
+                // Here you would make an AJAX request to load more photos
+                alert("Yangi rasmlar yuklandi! (Bu demo versiya)");
+                btn.innerHTML = '<i class="fas fa-check"></i> Yuklandi';
+                
+                // After 2 seconds, reset button
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Ko\'proq yuklash';
+                }, 2000);
+            }, 1500);
+        }
+        
+        // Swipe navigation
+        function setupSwipeNavigation() {
+            let startX, startY;
+            const threshold = 50;
+            
+            document.addEventListener('touchstart', e => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            });
+            
+            document.addEventListener('touchend', e => {
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                
+                const diffX = startX - endX;
+                const diffY = startY - endY;
+                
+                // Only horizontal swipe
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+                    if (diffX > 0) {
+                        // Swipe left - next photo
+                        navigateToPhoto('next');
+                    } else {
+                        // Swipe right - previous photo
+                        navigateToPhoto('prev');
+                    }
+                }
+            });
+        }
+        
+        // Navigate between photos
+        function navigateToPhoto(direction) {
+            if (document.getElementById('imageViewer').style.display !== 'block') return;
+            
+            if (direction === 'next' && currentPhotoIndex < photoItems.length - 1) {
+                currentPhotoIndex++;
+            } else if (direction === 'prev' && currentPhotoIndex > 0) {
+                currentPhotoIndex--;
+            } else {
+                return; // No more photos in that direction
+            }
+            
+            // Update viewer with new photo
+            const newPhoto = photoItems[currentPhotoIndex];
+            document.getElementById('viewerImage').src = newPhoto.dataset.photoUrl;
+            updateImageInfo(currentPhotoIndex);
+            
+            // Reset to normal mode when switching photos
+            setImageMode('normal');
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('imageViewer').style.display === 'block') {
+                switch(e.key) {
+                    case 'Escape':
+                        closeImageViewer();
+                        break;
+                    case 'ArrowLeft':
+                        navigateToPhoto('prev');
+                        break;
+                    case 'ArrowRight':
+                        navigateToPhoto('next');
+                        break;
+                    case 'd':
+                        downloadImage();
+                        break;
+                    case 'f':
+                        toggleFilters();
+                        break;
+                    case '1': // 1 - Kichiklashtirish
+                        setImageMode('small');
+                        break;
+                    case '2': // 2 - Normal holat
+                        setImageMode('normal');
+                        break;
+                    case '3': // 3 - Ekranni to'ldirish
+                        setImageMode('fullscreen');
+                        break;
+                }
+            }
+        });
+        
+        // Close download options when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.download-btn') && !e.target.closest('.viewer-btn')) {
+                document.getElementById('downloadOptions').style.display = 'none';
+            }
+        });
+
+        function toggleFullscreen() {
+            const viewer = document.getElementById("imageViewer");
+            const icon = document.getElementById("fullscreenIcon");
+
+            if (!document.fullscreenElement) {
+                viewer.requestFullscreen().then(() => {
+                    icon.classList.remove("fa-expand");
+                    icon.classList.add("fa-compress");
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    icon.classList.remove("fa-compress");
+                    icon.classList.add("fa-expand");
+                });
+            }
+        }
+    </script>
+</body>
+</html>

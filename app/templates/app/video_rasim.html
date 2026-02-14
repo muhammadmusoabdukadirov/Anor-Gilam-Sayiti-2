@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anor Media Boshqaruvi</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* === ROOT VA UMUMIY O'ZGARUVCHILAR === */
+:root {
+    --anor-dark: #2b0000;
+    --anor-main: #8b0000;
+    --anor-red: #c1121f;
+    --anor-light: #ff4d4d;
+    --anor-gold: #ffd166;
+    --glass: rgba(255, 255, 255, 0.08);
+    --glass-dark: rgba(0, 0, 0, 0.3);
+}
+
+/* === UMUMIY BODY === */
+body {
+    background: radial-gradient(ellipse at center, 
+        var(--anor-main) 0%, 
+        var(--anor-dark) 70%, 
+        #1a0000 100%);
+    font-family: 'Segoe UI', Tahoma, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 30px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* === BACKGROUND PARTICLES === */
+.particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 77, 77, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 80% 20%, rgba(255, 209, 102, 0.08) 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, rgba(139, 0, 0, 0.15) 0%, transparent 20%);
+    background-size: 50px 50px;
+    animation: float 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-1000px) rotate(360deg); }
+}
+
+/* === CONTAINER === */
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* === SARDALVALAR === */
+.page-header {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+    padding: 40px 0;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        inset 0 0 60px rgba(255, 77, 77, 0.1);
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--anor-red), 
+        var(--anor-gold), 
+        var(--anor-red));
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.page-header h1 {
+    font-size: 3.2rem;
+    margin: 0 0 15px 0;
+    background: linear-gradient(45deg, 
+        #fff 30%, 
+        #ffb3b3 70%, 
+        var(--anor-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 5px 25px rgba(255, 77, 77, 0.3);
+}
+
+.page-header h2 {
+    font-size: 1.8rem;
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* === MAIN CARD DESIGN === */
+.main-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 40px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.main-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, 
+        rgba(255, 77, 77, 0.1) 0%, 
+        transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* === FORM STYLES === */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    position: relative;
+    z-index: 2;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--anor-gold);
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-label i {
+    color: var(--anor-light);
+}
+
+.form-control {
+    width: 100%;
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-control:focus {
+    border-color: var(--anor-light);
+    box-shadow: 0 0 25px rgba(255, 77, 77, 0.4);
+    background: rgba(0, 0, 0, 0.6);
+}
+
+/* === POMEGRANATE BUTTON (ENHANCED) === */
+.pomegranate-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 18px 40px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, 
+        var(--anor-dark) 0%, 
+        var(--anor-main) 25%, 
+        var(--anor-red) 50%, 
+        var(--anor-light) 75%, 
+        #ff8e8e 100%);
+    color: white !important;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+    box-shadow: 
+        0 15px 50px rgba(193, 18, 31, 0.7),
+        0 0 0 3px rgba(255, 255, 255, 0.15),
+        inset 0 0 30px rgba(255, 255, 255, 0.1);
+    animation: pomegranateGlow 3s infinite alternate;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-top: 30px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.pomegranate-btn .spark {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 70%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.9),
+        transparent
+    );
+    animation: shine 4s infinite;
+    filter: blur(15px);
+}
+
+.pomegranate-btn .text,
+.pomegranate-btn i {
+    position: relative;
+    z-index: 3;
+    text-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.pomegranate-btn i {
+    font-size: 1.8rem;
+    animation: iconFloat 4s infinite ease-in-out;
+}
+
+@keyframes pomegranateGlow {
+    0% {
+        box-shadow: 
+            0 10px 40px rgba(193, 18, 31, 0.6),
+            0 0 0 2px rgba(255, 77, 77, 0.4);
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        box-shadow: 
+            0 25px 80px rgba(255, 77, 77, 0.95),
+            0 0 0 5px rgba(255, 255, 255, 0.3),
+            inset 0 0 40px rgba(255, 255, 255, 0.2);
+        transform: scale(1.05) rotate(1deg);
+    }
+    100% {
+        box-shadow: 
+            0 10px 40px rgba(193, 18, 31, 0.6),
+            0 0 0 2px rgba(255, 77, 77, 0.4);
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        left: 200%;
+        opacity: 0;
+    }
+}
+
+@keyframes iconFloat {
+    0%, 100% { 
+        transform: translateY(0) rotate(0deg) scale(1); 
+    }
+    25% { 
+        transform: translateY(-8px) rotate(-5deg) scale(1.1); 
+    }
+    75% { 
+        transform: translateY(5px) rotate(5deg) scale(0.95); 
+    }
+}
+
+.pomegranate-btn:hover {
+    transform: scale(1.1) rotate(-3deg) !important;
+    box-shadow: 
+        0 35px 120px rgba(255, 77, 77, 1),
+        0 0 0 4px rgba(255, 255, 255, 0.4),
+        inset 0 0 60px rgba(255, 255, 255, 0.3);
+    animation-play-state: paused;
+}
+
+.pomegranate-btn:hover i {
+    transform: scale(1.3) rotate(15deg) !important;
+    animation: none;
+}
+
+.pomegranate-btn:active {
+    transform: scale(0.95) rotate(0deg) !important;
+    transition: all 0.1s;
+}
+
+/* === MEDIA TABLE STYLES === */
+.table-container {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 30px;
+    margin-top: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-header h2 {
+    margin: 0;
+    color: var(--anor-gold);
+    font-size: 2.2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.media-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.media-table thead {
+    background: linear-gradient(135deg, 
+        var(--anor-main), 
+        var(--anor-red));
+}
+
+.media-table th {
+    padding: 20px 15px;
+    text-align: left;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-bottom: 3px solid var(--anor-gold);
+    position: relative;
+    overflow: hidden;
+}
+
+.media-table th::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--anor-gold), 
+        transparent);
+    animation: shimmerLine 2s infinite;
+}
+
+@keyframes shimmerLine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.media-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.media-table tbody tr:hover {
+    background: rgba(255, 77, 77, 0.15);
+    transform: translateX(10px);
+}
+
+.media-table td {
+    padding: 18px 15px;
+    vertical-align: middle;
+}
+
+/* === MEDIA ACTION BUTTONS === */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.media-action {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    min-width: 120px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    animation: buttonFloat 6s infinite ease-in-out;
+}
+
+@keyframes buttonFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.media-action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2), 
+        rgba(255, 255, 255, 0.05));
+    z-index: 1;
+}
+
+.media-action::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+    transition: 0.6s;
+}
+
+.media-action i,
+.media-action .text {
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.media-action i {
+    font-size: 1.2rem;
+}
+
+/* EDIT BUTTON */
+.edit-btn {
+    background: linear-gradient(135deg, 
+        #ff6b35 0%, 
+        #ff8e53 50%, 
+        #ffb347 100%);
+}
+
+.edit-btn:hover {
+    transform: scale(1.15) rotate(-5deg) !important;
+    box-shadow: 0 15px 40px rgba(255, 107, 53, 0.8);
+}
+
+.edit-btn:hover::after {
+    left: 100%;
+}
+
+.edit-btn:hover i {
+    transform: scale(1.3) rotate(360deg);
+}
+
+/* DELETE BUTTON */
+.delete-btn {
+    background: linear-gradient(135deg, 
+        #8b0000 0%, 
+        #c1121f 50%, 
+        #ff4d4d 100%);
+}
+
+.delete-btn:hover {
+    transform: scale(1.15) rotate(5deg) !important;
+    box-shadow: 0 15px 40px rgba(255, 77, 77, 0.8);
+}
+
+.delete-btn:hover::after {
+    left: 100%;
+}
+
+.delete-btn:hover i {
+    transform: scale(1.3) rotate(-360deg);
+}
+
+/* MEDIA PREVIEWS */
+.media-preview {
+    width: 120px;
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.media-preview:hover {
+    transform: scale(1.8) translateY(-10px);
+    z-index: 100;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.media-preview img,
+.media-preview video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.media-preview .video-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 24px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* STATUS BADGES */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.status-active {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+}
+
+.status-inactive {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 60px 30px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.3;
+}
+
+.empty-state h3 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: var(--anor-gold);
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 1200px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .media-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        padding: 30px 20px;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .media-action {
+        min-width: 100%;
+    }
+    
+    .pomegranate-btn {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+}
+
+/* === BACK TO HOME BUTTON === */
+.back-home {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    z-index: 1000;
+}
+
+.back-btn {
+    padding: 12px 25px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, 
+        rgba(139, 0, 0, 0.8), 
+        rgba(193, 18, 31, 0.6));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.back-btn:hover {
+    transform: translateX(-5px);
+    background: linear-gradient(135deg, 
+        rgba(255, 77, 77, 0.9), 
+        rgba(193, 18, 31, 0.8));
+    box-shadow: 0 10px 30px rgba(255, 77, 77, 0.4);
+}
+
+/* === FOOTER === */
+.footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 30px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+</style>
+</head>
+<body>
+
+<div class="particles"></div>
+
+<!-- Back to Home Button -->
+<div class="back-home">
+    <a href="{% url 'index' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span>Bosh sahifa</span>
+    </a>
+</div>
+
+<div class="container">
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1><i class="fas fa-photo-video"></i> ANOR Media Boshqaruvi</h1>
+        <h2>Video va rasmlarni professional tarzda boshqaring</h2>
+    </div>
+
+    <!-- ADD/EDIT FORM -->
+    <div class="main-card">
+        <h2 style="color: var(--anor-gold); margin-bottom: 30px; display: flex; align-items: center; gap: 15px;">
+            <i class="fas {% if action == 'edit' %}fa-edit{% else %}fa-plus-circle{% endif %}"></i>
+            {% if action == 'edit' %}Media tahrirlash{% else %}Yangi media qo'shish{% endif %}
+        </h2>
+        
+        <form method="post" enctype="multipart/form-data" class="form-grid">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="form-label">
+                    <i class=
+                        "fas fa-{% if field.name == 'title' %} 
+                        heading{% elif field.name == 'description' %}
+                        align-left{% elif field.name == 'image' %}
+                        image{% elif field.name == 'video_file' %}
+                        file-video{% elif field.name == 'video_url' %}
+                        link{% elif field.name == 'media_type' %}
+                        folder{% elif field.name == 'is_active' %}
+                        toggle-on{% endif %}">
+                    </i>
+                    {{ field.label }}
+                </label>
+                <div class="form-control-wrapper">
+                    {{ field }}
+                </div>
+                {% if field.help_text %}
+                <small style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem; display: block; margin-top: 5px;">
+                    {{ field.help_text }}
+                </small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div style="color: #ff6b6b; font-size: 0.9rem; margin-top: 5px;">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            
+            <div style="grid-column: 1 / -1; text-align: center;">
+                <button type="submit" class="pomegranate-btn">
+                    <span class="spark"></span>
+                    <i class="fas {% if action == 'edit' %}fa-save{% else %}fa-plus{% endif %}"></i>
+                    <span class="text">{% if action == 'edit' %}SAQLASH{% else %}QO'SHISH{% endif %}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- MEDIA LIST TABLE -->
+    <div class="table-container">
+        
+        {% if media_list %}
+        <div style="overflow-x: auto;">
+            <table class="media-table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> ID</th>
+                        <th><i class="fas fa-heading"></i> Nom</th>
+                        <th><i class="fas fa-folder"></i> Turi</th>
+                        <th><i class="fas fa-eye"></i> Ko'rish</th>
+                        <th><i class="fas fa-heart"></i> Layklar</th>
+                        <th><i class="fas fa-toggle-on"></i> Holati</th>
+                        <th><i class="fas fa-calendar"></i> Sana</th>
+                        <th><i class="fas fa-cogs"></i> Amallar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for media in media_list %}
+                    <tr>
+                        <td><strong>#{{ media.id }}</strong></td>
+                        <td style="font-weight: 600; color: var(--anor-gold);">{{ media.title|truncatechars:25 }}</td>
+                        <td>
+                            <span style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 15px; border-radius: 20px; background: rgba(255, 255, 255, 0.1);">
+                                <i class="fas fa-{% if media.media_type == 'photo' %}image{% else %}video{% endif %}"></i>
+                                {{ media.get_media_type_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if media.media_type == 'photo' and media.image %}
+                                <div class="media-preview">
+                                    <img src="{{ media.image.url }}" alt="{{ media.title }}" 
+                                         onmouseenter="this.style.transform='scale(1.1)'" 
+                                         onmouseleave="this.style.transform='scale(1)'">
+                                </div>
+                            {% elif media.media_type == 'video' %}
+                                <div class="media-preview">
+                                    {% if media.video_file %}
+                                        <video muted playsinline 
+                                               onmouseenter="this.play()" 
+                                               onmouseleave="this.pause(); this.currentTime=0;">
+                                            <source src="{{ media.video_file.url }}">
+                                        </video>
+                                        <div class="video-icon">
+                                            <i class="fas fa-play-circle"></i>
+                                        </div>
+                                    {% elif media.video_url %}
+                                        <div style="background: linear-gradient(135deg, var(--anor-main), var(--anor-red)); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <span style="color: rgba(255, 255, 255, 0.5);">Yo'q</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center; font-size: 1.2rem; font-weight: bold;">
+                            <span style="color: #ff6b6b;">{{ media.views }}</span>
+                        </td>
+                        <td style="text-align: center; font-size: 1.2rem; font-weight: bold;">
+                            <span style="color: #2ecc71;">{{ media.likes }}</span>
+                        </td>
+                        <td>
+                            {% if media.is_active %}
+                                <span class="status-badge status-active">
+                                    <i class="fas fa-check-circle"></i> Faol
+                                </span>
+                            {% else %}
+                                <span class="status-badge status-inactive">
+                                    <i class="fas fa-times-circle"></i> Nofaol
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                                {{ media.created_at|date:"d.m.Y" }}<br>
+                                <small style="color: rgba(255, 255, 255, 0.5);">{{ media.created_at|date:"H:i" }}</small>
+                            </span>
+                        </td>
+                        <td>
+                            {% if request.user.is_superuser %}
+                                <div class="action-buttons">
+                                    <a href="{% url 'edit_media' media.pk %}" class="media-action edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                        <span class="text">Tahrirlash</span>
+                                    </a>
+                                    <a href="{% url 'delete_media' media.pk %}" class="media-action delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                        <span class="text">O'chirish</span>
+                                    </a>
+                                </div>
+                            {% else %}
+                                <span style="color: rgba(255, 255, 255, 0.5);">Ruxsat yo'q</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-photo-video-slash"></i>
+            <h3>Hali media qo'shilmagan</h3>
+            <p>Birinchi media qo'shish uchun yuqoridagi formadan foydalaning</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p><i class="fas fa-copyright"></i> 2024 Anor Gilam Yuvish. Barcha huquqlar himoyalangan.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem; color: rgba(255, 255, 255, 0.3);">
+            <i class="fas fa-code"></i> Professional Media Boshqaruv Tizimi
+        </p>
+    </div>
+</div>
+
+<script>
+    // Hover effects for all interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Form field focus effects
+        const formControls = document.querySelectorAll('.form-control');
+        formControls.forEach(control => {
+            control.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-5px)';
+            });
+            
+            control.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Table row hover effects
+        const tableRows = document.querySelectorAll('.media-table tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 10px 30px rgba(255, 77, 77, 0.3)';
+                this.style.zIndex = '10';
+            });
+            
+            row.addEventListener('mouseleave', function() {
+                this.style.boxShadow = 'none';
+                this.style.zIndex = '1';
+            });
+        });
+        
+        // Button hover sound effect simulation
+        const buttons = document.querySelectorAll('.pomegranate-btn, .media-action, .back-btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s ease';
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
+        
+        // Media preview hover effects
+        const mediaPreviews = document.querySelectorAll('.media-preview');
+        mediaPreviews.forEach(preview => {
+            preview.addEventListener('mouseenter', function() {
+                this.style.zIndex = '100';
+            });
+            
+            preview.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+        
+        // Auto-play videos on hover
+        const videos = document.querySelectorAll('.media-preview video');
+        videos.forEach(video => {
+            video.addEventListener('mouseenter', function() {
+                this.play();
+            });
+            
+            video.addEventListener('mouseleave', function() {
+                this.pause();
+                this.currentTime = 0;
+            });
+        });
+    });
+
+    // Dynamic form field handling
+    const mediaTypeSelect = document.querySelector('[name="media_type"]');
+    if (mediaTypeSelect) {
+        function toggleFields() {
+            const imageField = document.querySelector('[name="image"]').closest('.form-group');
+            const videoFileField = document.querySelector('[name="video_file"]').closest('.form-group');
+            const videoUrlField = document.querySelector('[name="video_url"]').closest('.form-group');
+            
+            if (mediaTypeSelect.value === 'photo') {
+                imageField.style.display = 'block';
+                videoFileField.style.display = 'none';
+                videoUrlField.style.display = 'none';
+            } else {
+                imageField.style.display = 'none';
+                videoFileField.style.display = 'block';
+                videoUrlField.style.display = 'block';
+            }
+        }
+        
+        mediaTypeSelect.addEventListener('change', toggleFields);
+        toggleFields(); // Initial call
+    }
+
+    // Add CSS for ripple effect
+    const style = document.createElement('style');
+    style.textContent = `
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+        transform: scale(0);
+        animation: rippleEffect 0.6s linear;
+        width: 100px;
+        height: 100px;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -50px;
+        pointer-events: none;
+    }
+
+    @keyframes rippleEffect {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    `;
+    document.head.appendChild(style);
+</script>
+
+</body>
+</html>

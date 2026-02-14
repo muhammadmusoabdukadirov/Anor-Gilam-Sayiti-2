@@ -1,0 +1,314 @@
+{% load static %}
+{% load humanize %}
+
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijozlar Ro'yxati - Anor Gilam Yuvish</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/cilents.css' %}">
+    <style>
+        /* Barcha status kartochkalari uchun umumiy styling */
+        .stats-cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            flex: 1 1 200px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: default;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-card i {
+            font-size: 28px;
+        }
+
+        .stat-card .stat-info h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .stat-card .stat-info .number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Ranglar bo‘yicha individual kartochkalar */
+        .stat-card.total {
+            background-color: #e3f2fd; /* engil ko‘k */
+            border-left: 6px solid #2196f3;
+        }
+
+        .stat-card.total i {
+            color: #2196f3;
+        }
+
+        .stat-card.new {
+            background-color: #fff8e1; /* engil sariq */
+            border-left: 6px solid #ffc107;
+        }
+
+        .stat-card.new i {
+            color: #ffc107;
+        }
+
+        .stat-card.processing {
+            background-color: #fff3e0; /* engil to‘q sariq/orange */
+            border-left: 6px solid #ff9800;
+        }
+
+        .stat-card.processing i {
+            color: #ff9800;
+        }
+
+        .stat-card.completed {
+            background-color: #e8f5e9; /* engil yashil */
+            border-left: 6px solid #4caf50;
+        }
+
+        .stat-card.completed i {
+            color: #4caf50;
+        }
+
+        /* Agar hover qilinsa rangli yengil effekt */
+        .stat-card:hover i {
+            transform: scale(1.2);
+            transition: transform 0.2s;
+        }
+    </style>
+    <style>
+        .status-delete-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap; /* yonma-yon bo‘lsin */
+    align-items: center;
+}
+
+/* Status tugmalari flex ichida */
+.status-form {
+    display: flex;
+    gap: 6px;
+}
+
+/* Delete tugmasi */
+.status-delete-group form:last-child {
+    margin-left: 10px; /* status tugmalardan biroz ajratish */
+}
+        /* Status + Delete tugmalari bir qatorda */
+.status-delete-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Umumiy button styling */
+.status-delete-group button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Ranglar va gradientlar */
+.status-delete-group button[value="new"] {
+    background: linear-gradient(45deg, #2196f3, #21cbf3);
+}
+.status-delete-group button[value="processing"] {
+    background: linear-gradient(45deg, #ff9800, #ffc107);
+    color: #212529;
+}
+.status-delete-group button[value="completed"] {
+    background: linear-gradient(45deg, #4caf50, #66bb6a);
+}
+
+/* Delete tugmasi */
+.status-delete-group .delete-btn {
+    background: linear-gradient(45deg, #f44336, #e57373);
+}
+.status-delete-group .delete-btn:hover {
+    background: linear-gradient(45deg, #e53935, #ef9a9a);
+}
+
+/* Hover effekti umumiy */
+.status-delete-group button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    opacity: 0.95;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+    <!-- Sarlavha -->
+    <div class="header animate-fade">
+        <h1><i class="fas fa-users"></i> Mijozlar Ro'yxati</h1>
+        <p>Barcha buyurtmalar va mijoz ma'lumotlari</p>
+
+        <!-- Asosiy menyuga qaytish -->
+        <a href="/" class="back-main-btn">
+            <i class="fas fa-arrow-left"></i> Asosiy menyuga qaytish
+        </a>
+    </div>
+
+    <!-- Statistik kartochkalar -->
+    <div class="stats-cards">
+        <div class="stat-card total animate-fade">
+            <i class="fas fa-users"></i>
+            <div class="stat-info">
+                <h3>Jami Mijozlar</h3>
+                <div class="number" id="totalOrders">{{ total_orders }}</div>
+            </div>
+        </div>
+        <div class="stat-card new animate-fade">
+            <i class="fas fa-star"></i>
+            <div class="stat-info">
+                <h3>Yangi</h3>
+                <div class="number" id="newOrders">{{ new_orders }}</div>
+            </div>
+        </div>
+        <div class="stat-card processing animate-fade">
+            <i class="fas fa-cog"></i>
+            <div class="stat-info">
+                <h3>Jarayonda</h3>
+                <div class="number" id="processingOrders">{{ processing_orders }}</div>
+            </div>
+        </div>
+        <div class="stat-card completed animate-fade">
+            <i class="fas fa-check"></i>
+            <div class="stat-info">
+                <h3>Tugatilgan</h3>
+                <div class="number" id="completedOrders">{{ completed_orders }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jadval -->
+    <div class="table-container animate-fade">
+        <table id="clientsTable">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ism</th>
+                <th>Telefon</th>
+                <th>Manzil</th>
+                <th>Gilam Turi</th>
+                <th>Sana</th>
+                <th>Holat</th>
+                <th>Amallar</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+            <tr data-id="{{ order.id }}">
+                <td>#{{ order.id }}</td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.phone }}</td>
+                <td>{{ order.address|truncatechars:30 }}</td>
+                <td>
+                    {% if order.carpet_type %}
+                    {{ order.carpet_type.name }}
+                    {% else %}
+                    {{ order.other_carpet_name|default:"Noma'lum" }}
+                    {% endif %}
+                </td>
+                <td>{{ order.date }}</td>
+                <td>
+                    <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </td>
+                <td>
+ <div class="status-delete-group">
+    <!-- Status tugmalari alohida form -->
+<div class="status-delete-group">
+    <!-- Status tugmalari -->
+    <form method="POST" action="{% url 'update_order_status' order.id %}" class="status-form">
+        {% csrf_token %}
+        <button name="status" value="new">★ Yangi</button>
+        <button name="status" value="processing">⚙ Jarayonda</button>
+        <button name="status" value="completed">✔ Tugatilgan</button>
+    </form>
+
+    <!-- Delete tugmasi -->
+    <form method="POST" action="{% url 'delete_order' order.id %}" onsubmit="return confirm('Haqiqatan ham bu buyurtmani o‘chirmoqchimisiz?');">
+        {% csrf_token %}
+        <button type="submit" class="delete-btn">🗑 O'chirish</button>
+    </form>
+</div>
+
+</div>      </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.status-form').on('submit', function(e){
+            e.preventDefault();
+            let form = $(this);
+            let tr = form.closest('tr');
+            let orderId = tr.data('id');
+            let status = form.find('button[name="status"]:focus').val();
+            let csrfToken = form.find('input[name="csrfmiddlewaretoken"]').val();
+
+            $.ajax({
+                url: `/order/${orderId}/update-status/`,
+                method: 'POST',
+                data: { status: status, csrfmiddlewaretoken: csrfToken },
+                success: function(){
+                    // Badge yangilash
+                    let badge = tr.find('.status-badge');
+                    badge.removeClass('status-new status-processing status-completed')
+                         .addClass('status-' + status)
+                         .text(status.charAt(0).toUpperCase() + status.slice(1));
+
+                    // Statistika yangilash
+                    let total = $('#clientsTable tbody tr').length;
+                    $('#totalOrders').text(total);
+
+                    let newCount = $('#clientsTable tbody tr .status-badge.status-new').length;
+                    let processingCount = $('#clientsTable tbody tr .status-badge.status-processing').length;
+                    let completedCount = $('#clientsTable tbody tr .status-badge.status-completed').length;
+
+                    $('#newOrders').text(newCount);
+                    $('#processingOrders').text(processingCount);
+                    $('#completedOrders').text(completedCount);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

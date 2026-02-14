@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<title>Boshqaruv</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #1e1e1e;
+        color: #f0f0f0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+        background-color: #2c2c2c;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #ff4c4c;
+    }
+
+    .accordion-btn {
+        width: 100%;
+        background-color: #ff4c4c;
+        color: #fff;
+        padding: 15px;
+        text-align: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        transition: background-color 0.3s;
+    }
+
+    .accordion-btn:hover { background-color: #e03f3f; }
+
+    .accordion-content {
+        background-color: #3a3a3a;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        border-radius: 5px;
+        padding: 0 20px;
+    }
+
+    .accordion-content.active {
+        padding: 20px;
+        max-height: 1000px;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 4px;
+        border: 1px solid #ff4c4c;
+        background-color: #2c2c2c;
+        color: #f0f0f0;
+        box-sizing: border-box;
+        margin-bottom: 15px;
+    }
+
+    button.submit-btn {
+        background-color: #ff4c4c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button.submit-btn:hover { background-color: #e03f3f; }
+
+    .toggle-password {
+        margin-bottom: 15px;
+        cursor: pointer;
+        background-color: #444;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    /* Messages */
+    #messages-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    .message {
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        transition: opacity 0.5s ease;
+    }
+    .message.success { background-color: #28a745; color: #fff; }
+    .message.error { background-color: #dc3545; color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Boshqaruv</h1>
+
+    <div style="text-align:center; margin-bottom:20px;">
+        <a href="{% url 'index' %}"
+           class="submit-btn"
+           style="text-decoration:none;
+                  display:inline-block;
+                  background-color:#ff4c4c;
+                  color:white;
+                  padding:15px 30px;
+                  font-size:20px;
+                  border-radius:8px;
+                  font-weight:bold;">
+            Asosiy sahifaga
+        </a>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div id="messages-container">
+        {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messagesContainer = document.getElementById('messages-container');
+            if(messagesContainer) {
+                setTimeout(() => {
+                    const messages = messagesContainer.querySelectorAll('.message');
+                    messages.forEach(msg => {
+                        msg.style.opacity = '0';
+                        setTimeout(() => msg.remove(), 500);
+                    });
+                }, 5000);
+            }
+        });
+    </script>
+    {% endif %}
+
+ <!-- Register -->
+<button class="accordion-btn" id="register-btn">Ro‘yxatdan o‘tish</button>
+<div class="accordion-content" id="register-content">
+    <form method="post" action="{% url 'boshqaruv' %}">
+        {% csrf_token %}
+        {{ register_form.username.label_tag }}
+        {{ register_form.username }}
+        <small style="color:#ff4c4c">{{ register_form.username.help_text }}</small>
+
+        {{ register_form.password1.label_tag }}
+        {{ register_form.password1 }}
+        <small style="color:#ff4c4c">{{ register_form.password1.help_text }}</small>
+        <button type="button" class="toggle-password" data-target="{{ register_form.password1.id_for_label }}">Ko‘rsat</button>
+
+        {{ register_form.password2.label_tag }}
+        {{ register_form.password2 }}
+        <small style="color:#ff4c4c">{{ register_form.password2.help_text }}</small>
+        <button type="button" class="toggle-password" data-target="{{ register_form.password2.id_for_label }}">Ko‘rsat</button>
+
+        <button type="submit" name="action" value="register" class="submit-btn">Ro‘yxatdan o‘tish</button>
+    </form>
+</div>
+
+    <!-- Login -->
+<button class="accordion-btn" id="login-btn">Kirish</button>
+<div class="accordion-content" id="login-content">
+    <form method="post" action="{% url 'boshqaruv' %}">
+        {% csrf_token %}
+        {{ login_form.username.label_tag }}
+        {{ login_form.username }}
+
+        {{ login_form.password.label_tag }}
+        {{ login_form.password }}
+        <button type="button" class="toggle-password" data-target="{{ login_form.password.id_for_label }}">Ko‘rsat</button>
+
+        <button type="submit" name="action" value="login" class="submit-btn">Kirish</button>
+    </form>
+</div>
+
+    <!-- Logout -->
+<button class="accordion-btn">Chiqish</button>
+<div class="accordion-content">
+    <form method="post" action="{% url 'boshqaruv' %}">
+        {% csrf_token %}
+        <button type="submit" name="action" value="logout" class="submit-btn">Chiqish</button>
+    </form>
+</div>
+
+</div>
+
+<script>
+    // Accordion
+    const accButtons = document.querySelectorAll('.accordion-btn');
+    accButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.nextElementSibling.classList.toggle('active');
+        });
+    });
+
+    // Password toggle
+    document.querySelectorAll('.toggle-password').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            if(input.type === "password"){
+                input.type = "text";
+                btn.textContent = "Yashir";
+            } else {
+                input.type = "password";
+                btn.textContent = "Ko‘rsat";
+            }
+        });
+    });
+
+    // Sahifadan link orqali register/login ochish
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlHash = window.location.hash;
+        if(urlHash === '#register'){
+            document.getElementById('register-content').classList.add('active');
+        }
+        if(urlHash === '#login'){
+            document.getElementById('login-content').classList.add('active');
+        }
+    });
+</script>
+
+</body>
+</html>

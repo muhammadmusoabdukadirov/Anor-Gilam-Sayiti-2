@@ -1,0 +1,14 @@
+.admin-avatar {
+    width: 50px;          /* doimiy kenglik */
+    height: 50px;         /* doimiy balandlik */
+    border-radius: 50%;   /* dumaloq qilish */
+    overflow: hidden;     /* rasm divdan chiqmasligi uchun */
+    border: 2px solid #ff4c4c;
+    flex-shrink: 0;       /* div kichrayib ketmasligi uchun */
+}
+
+.admin-avatar img {
+    width: 100%;          /* rasm divni to‘ldiradi */
+    height: 100%;
+    object-fit: cover;    /* rasmni chiroyli kesish */
+}

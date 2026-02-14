@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gilam Turlari Sozlamalari</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #1e1e1e;
+        color: #f0f0f0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+        background-color: #2c2c2c;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #ff4c4c;
+    }
+
+    /* Accordion Buttons */
+    .accordion-btn {
+        width: 100%;
+        background-color: #ff4c4c;
+        color: #fff;
+        padding: 15px;
+        text-align: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        transition: background-color 0.3s;
+    }
+
+    .accordion-btn:hover { background-color: #e03f3f; }
+
+    /* Delete Button Style */
+    .accordion-btn.delete { background-color: #dc3545; }
+    .accordion-btn.delete:hover { background-color: #b32b2b; }
+    button.submit-btn.delete { background-color: #dc3545; }
+    button.submit-btn.delete:hover { background-color: #b32b2b; }
+
+    /* Form content */
+    .accordion-content {
+        background-color: #3a3a3a;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        border-radius: 5px;
+        padding: 0 20px;
+    }
+
+    .accordion-content.active {
+        padding: 20px;
+        max-height: 1000px; /* yetarli balandlik */
+    }
+
+    label { display: block; margin-bottom: 5px; font-weight: bold; color: #ff4c4c; }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 4px;
+        border: 1px solid #ff4c4c;
+        background-color: #2c2c2c;
+        color: #f0f0f0;
+        box-sizing: border-box;
+        margin-bottom: 15px;
+    }
+
+    button.submit-btn {
+        background-color: #ff4c4c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button.submit-btn:hover { background-color: #e03f3f; }
+
+    /* Messages */
+    #messages-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    .message {
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        transition: opacity 0.5s ease;
+    }
+    .message.success { background-color: #28a745; color: #fff; }
+    .message.error { background-color: #dc3545; color: #fff; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Gilam Turlari</h1>
+
+    <!-- Asosiy sahifaga tugma -->
+<div style="text-align:center; margin-bottom:20px;">
+    <a href="{% url 'index' %}"
+       class="submit-btn"
+       style="text-decoration:none;
+              display:inline-block;
+              background-color:#ff4c4c;
+              color:white;
+              padding:15px 30px;
+              font-size:20px;
+              border-radius:8px;
+              font-weight:bold;">
+        Asosiy sahifaga
+    </a>
+</div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div id="messages-container">
+        {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messagesContainer = document.getElementById('messages-container');
+            if(messagesContainer) {
+                setTimeout(() => {
+                    const messages = messagesContainer.querySelectorAll('.message');
+                    messages.forEach(msg => {
+                        msg.style.opacity = '0';
+                        setTimeout(() => msg.remove(), 500);
+                    });
+                }, 5000);
+            }
+        });
+    </script>
+    {% endif %}
+
+    <!-- Qo'shish Button -->
+    {% if user.is_superuser %}
+    <button class="accordion-btn"> Gilam Qo'shish</button>
+    <div class="accordion-content">
+        <form method="post">
+            {% csrf_token %}
+            {{ add_form.as_p }}
+            <button type="submit" class="submit-btn">Saqlash</button>
+        </form>
+    </div>
+
+    <!-- Yangilash Button -->
+    <button class="accordion-btn">Gilam Yangilash </button>
+    <div class="accordion-content">
+        <form method="post">
+            {% csrf_token %}
+            <label>Tanlang:</label>
+            <select id="carpet-select" name="update-id">
+                <option value="">-- Gilam turini tanlang --</option>
+                {% for carpet in carpets %}
+                    <option value="{{ carpet.id }}"
+                        {% if update_form.instance and carpet.id == update_form.instance.id %}selected{% endif %}>
+                        {{ carpet.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            {{ update_form.as_p }}
+            <button type="submit" class="submit-btn">Yangilash</button>
+        </form>
+    </div>
+
+ <!-- O'chirish Button (container ichida, Qo'shish va Yangilash bilan bir qatorda) -->
+<button class="accordion-btn delete"> Gilam O'chirish</button>
+<div class="accordion-content">
+    <form method="post">
+        {% csrf_token %}
+        <label>Tanlang:</label>
+        <select name="delete-id" required>
+            <option value="">-- Gilam turini tanlang --</option>
+            {% for carpet in carpets %}
+                <option value="{{ carpet.id }}">{{ carpet.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="submit-btn delete">O'chirish</button>
+    </form>
+</div>
+    {% endif %}
+
+
+</div>
+
+<script>
+    // Accordion functionality
+    const accButtons = document.querySelectorAll('.accordion-btn');
+    accButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const content = btn.nextElementSibling;
+            content.classList.toggle('active');
+        });
+    });
+</script>
+
+</body>
+</html>

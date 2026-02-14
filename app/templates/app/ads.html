@@ -1,0 +1,30 @@
+<h2>Reklamalar</h2>
+
+{% for ad in ads %}
+<div style="border:1px solid #ccc; padding:20px; margin-bottom:20px;">
+    
+    <h3>{{ ad.title }}</h3>
+    <p>{{ ad.description }}</p>
+
+    {% if ad.ad_type == 'image' and ad.image %}
+        <img src="{{ ad.image.url }}" width="300">
+    {% endif %}
+
+    {% if ad.ad_type == 'video' and ad.video %}
+        <video width="400" controls>
+            <source src="{{ ad.video.url }}" type="video/mp4">
+        </video>
+    {% endif %}
+
+    {% if ad.ad_type == 'text' %}
+        <div style="background:#f2f2f2; padding:10px;">
+            {{ ad.description }}
+        </div>
+    {% endif %}
+
+    <p>👁 {{ ad.views }} ko‘rildi</p>
+
+</div>
+{% empty %}
+<p>Hozircha aktiv reklama yo‘q</p>
+{% endfor %}

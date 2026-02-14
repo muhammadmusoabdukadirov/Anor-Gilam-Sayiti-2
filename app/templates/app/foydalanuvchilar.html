@@ -1,0 +1,478 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foydalanuvchilar | Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --admin-primary: #3498db;
+            --admin-secondary: #2c3e50;
+            --admin-accent: #1abc9c;
+            --admin-warning: #f39c12;
+            --admin-danger: #e74c3c;
+            --admin-light: #ecf0f1;
+            --admin-dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            color: #333;
+        }
+        
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* HEADER */
+        .admin-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-header h1 {
+            color: var(--admin-secondary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header-stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat-box {
+            background: var(--admin-primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* SEARCH */
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 15px;
+            max-width: 600px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--admin-primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .search-btn {
+            padding: 12px 25px;
+            background: var(--admin-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        /* USERS TABLE */
+        .users-table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .users-table thead {
+            background: var(--admin-secondary);
+            color: white;
+        }
+        
+        .users-table th {
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 3px solid var(--admin-primary);
+        }
+        
+        .users-table tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .users-table tbody tr:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .users-table td {
+            padding: 16px 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--admin-primary), var(--admin-accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .user-details h3 {
+            margin-bottom: 5px;
+            color: var(--admin-dark);
+        }
+        
+        .user-details p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--admin-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-detail {
+            background: var(--admin-accent);
+        }
+        
+        .btn-detail:hover {
+            background: #16a085;
+        }
+        
+        /* PAGINATION */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        
+        .page-link {
+            padding: 10px 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: var(--admin-primary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .page-link:hover {
+            background: var(--admin-primary);
+            color: white;
+            border-color: var(--admin-primary);
+        }
+        
+        .current-page {
+            background: var(--admin-primary);
+            color: white;
+            border-color: var(--admin-primary);
+        }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        /* BACK BUTTON */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: var(--admin-secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #2c3e50;
+            transform: translateX(-5px);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .header-stats {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .users-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- BACK BUTTON -->
+        <a href="{% url 'baraban' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Baraban sahifasiga
+        </a>
+        
+        <!-- HEADER -->
+        <div class="admin-header">
+            <h1>
+                <i class="fas fa-users"></i>
+                Foydalanuvchilar Ro'yxati
+            </h1>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <div class="stat-value">{{ total_users }}</div>
+                    <div class="stat-label">Jami foydalanuvchi</div>
+                </div>
+                <div class="stat-box" style="background: var(--admin-accent);">
+                    <div class="stat-value">{{ page_obj.paginator.count }}</div>
+                    <div class="stat-label">Ko'rsatilmoqda</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SEARCH -->
+        <div class="search-box">
+            <form method="GET" class="search-form">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ q }}" 
+                    placeholder="Ism, familiya, username yoki email bo'yicha qidiring..."
+                    class="search-input"
+                >
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i> Qidirish
+                </button>
+                {% if q %}
+                    <a href="{% url 'foydalanuvchilar_list' %}" class="search-btn" style="background: var(--admin-warning);">
+                        <i class="fas fa-times"></i> Tozalash
+                    </a>
+                {% endif %}
+            </form>
+        </div>
+        
+        <!-- USERS TABLE -->
+        <div class="users-table-container">
+            {% if page_obj %}
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Foydalanuvchi</th>
+                            <th>Ro'yxatdan o'tgan</th>
+                            <th>Oxirgi faollik</th>
+                            <th>Yutuqlar soni</th>
+                            <th>Status</th>
+                            <th>Harakatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in page_obj %}
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar">
+                                            {{ stat.user.username|first|upper }}
+                                        </div>
+                                        <div class="user-details">
+                                            <h3>
+                                                {% if stat.user.first_name or stat.user.last_name %}
+                                                    {{ stat.user.first_name }} {{ stat.user.last_name }}
+                                                {% else %}
+                                                    {{ stat.user.username }}
+                                                {% endif %}
+                                            </h3>
+                                            <p>{{ stat.user.email }}</p>
+                                            <p>@{{ stat.user.username }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ stat.user.date_joined|date:"d.m.Y H:i" }}</td>
+                                <td>
+                                    {% if stat.user.last_login %}
+                                        {{ stat.user.last_login|date:"d.m.Y H:i" }}
+                                    {% else %}
+                                        <span style="color: #999;">Hali kirilmagan</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ stat.total_spins }}</strong> ta aylantirish<br>
+                                    <strong>{{ stat.total_wins }}</strong> ta yutuq
+                                </td>
+                                <td>
+                                    <span class="status-badge status-active">
+                                        <i class="fas fa-check-circle"></i> Aktiv
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'foydalanuvchi_detail' stat.user.id %}" class="action-btn btn-detail">
+                                        <i class="fas fa-eye"></i> Ko'rish
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <!-- PAGINATION -->
+                {% if page_obj.has_other_pages %}
+                    <div class="pagination">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1{% if q %}&q={{ q }}{% endif %}" class="page-link">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                            <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}" class="page-link">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="page-link current-page">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}{% if q %}&q={{ q }}{% endif %}" class="page-link">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}" class="page-link">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}" class="page-link">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-user-slash"></i>
+                    <h3>Foydalanuvchilar topilmadi</h3>
+                    <p>Qidiruv bo'yicha hech narsa topilmadi yoki hali foydalanuvchilar ro'yxatdan o'tmagan.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

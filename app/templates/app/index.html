@@ -1,0 +1,1629 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anor Gilam Yuvish — Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/stayls.css' %}">
+    <link rel="stylesheet" href="{% static 'css/panel.css'%}">
+    <link rel="stylesheet" href="{% static 'css/rasm.css'%}">
+    <link rel="stylesheet" href="{% static 'css/message.css'%}">
+<style>
+    /* VIDEO VA SURATLAR GALEREYASI UCHUN STILLAR */
+    /* REKLAMA BANNERI */
+    .ad-banner {
+        background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+        color: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+        50% { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.5); }
+        100% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+    }
+
+    .ad-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .ad-text h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .ad-text p {
+        margin: 0 0 5px 0;
+        font-size: 1rem;
+    }
+
+    .ad-text small {
+        opacity: 0.9;
+        font-size: 0.85rem;
+    }
+
+    .ad-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-promo {
+        background: white;
+        color: #ff6b6b;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-promo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .timer {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+    }
+
+    #promoTimer {
+        font-weight: bold;
+        color: #ffeb3b;
+    }
+
+    .ad-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 5px 10px;
+        margin-left: 15px;
+    }
+
+    /* MEDIA GALEREYA */
+    .media-gallery {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    @media (max-width: 992px) {
+        .media-gallery {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* SECTIONS UCHUN UMUMIY */
+    .videos-column, .photos-column {
+        background: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .section-header h3 {
+        margin: 0;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .view-all {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+    }
+
+    .view-all:hover {
+        color: #2980b9;
+    }
+
+    /* VIDEOLAR STILI */
+    .videos-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    .video-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .video-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .video-preview {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .thumbnail {
+        position: relative;
+        flex-shrink: 0;
+        width: 160px;
+        height: 100px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .thumbnail img, .thumbnail-placeholder {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .thumbnail-placeholder {
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 32px;
+    }
+
+    .play-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+        cursor: pointer;
+    }
+
+    .thumbnail:hover .play-overlay {
+        opacity: 1;
+    }
+
+    .play-overlay i {
+        color: white;
+        font-size: 36px;
+    }
+
+    .duration {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.8rem;
+    }
+
+    .video-details {
+        flex: 1;
+    }
+
+    .video-details h4 {
+        margin: 0 0 8px 0;
+        color: #2c3e50;
+        font-size: 1.1rem;
+    }
+
+    .description {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .video-meta {
+        display: flex;
+        gap: 15px;
+        color: #888;
+        font-size: 0.85rem;
+    }
+
+    .video-meta span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* SURATLAR STILI */
+    .photos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    .photo-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s;
+    }
+
+    .photo-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .photo-container {
+        position: relative;
+        height: 150px;
+        overflow: hidden;
+    }
+
+    .photo-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+        cursor: pointer;
+    }
+
+    .photo-container:hover img {
+        transform: scale(1.05);
+    }
+
+    .photo-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .photo-container:hover .photo-overlay {
+        opacity: 1;
+    }
+
+    .btn-view {
+        background: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        color: #333;
+        font-size: 16px;
+    }
+
+    .photo-info {
+        padding: 10px;
+    }
+
+    .photo-info h4 {
+        margin: 0 0 5px 0;
+        font-size: 0.95rem;
+        color: #2c3e50;
+    }
+
+    .photo-info p {
+        color: #666;
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+
+    .photo-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: #888;
+    }
+
+    /* EMPTY STATE */
+    .empty-media {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px 20px;
+        color: #999;
+    }
+
+    .empty-media i {
+        font-size: 48px;
+        margin-bottom: 15px;
+        color: #ddd;
+    }
+
+    .empty-media p {
+        margin: 0;
+    }
+
+    /* MODAL STILLARI */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.9);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 10px;
+        max-width: 90%;
+        max-height: 90%;
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: #2c3e50;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .close {
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        text-align: right;
+    }
+
+    .btn-download {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* SCROLLBAR STILI */
+    .videos-list::-webkit-scrollbar,
+    .photos-grid::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .videos-list::-webkit-scrollbar-track,
+    .photos-grid::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .videos-list::-webkit-scrollbar-thumb,
+    .photos-grid::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+    }
+
+    .videos-list::-webkit-scrollbar-thumb:hover,
+    .photos-grid::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    /* DARK MODE */
+    .dark-mode .videos-column,
+    .dark-mode .photos-column {
+        background: #2d3748;
+        color: white;
+    }
+
+    .dark-mode .section-header h3 {
+        color: white;
+    }
+
+    .dark-mode .video-card,
+    .dark-mode .photo-card {
+        border-color: #4a5568;
+    }
+
+    .dark-mode .video-details h4,
+    .dark-mode .photo-info h4 {
+        color: white;
+    }
+
+    .dark-mode .description,
+    .dark-mode .photo-info p {
+        color: #cbd5e0;
+    }
+
+    .dark-mode .video-meta,
+    .dark-mode .photo-meta {
+        color: #a0aec0;
+    }
+
+    .dark-mode .modal-content {
+        background: #2d3748;
+        color: white;
+    }
+
+    .dark-mode .modal-footer {
+        background: #4a5568;
+    }
+    .pomegranate-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #8b0000, #c1121f, #ff4d4d);
+    color: #fff !important;
+    font-weight: 600;
+    text-decoration: none;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(193, 18, 31, 0.6);
+    animation: pulseGlow 2.5s infinite;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* hoverda "udar" effekt */
+    .pomegranate-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 30px rgba(255, 77, 77, 0.9);
+    }
+
+    /* yaltirash chizig‘i */
+    .pomegranate-btn .spark {
+        position: absolute;
+        top: 0;
+        left: -75%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255, 255, 255, 0.6),
+            transparent
+        );
+        animation: shine 3s infinite;
+    }
+
+    /* matn ustida turishi uchun */
+    .pomegranate-btn .text,
+    .pomegranate-btn i {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* yorqin nafas olayotgandek effekt */
+    @keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(193, 18, 31, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 77, 77, 0.9);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(193, 18, 31, 0.4);
+    }
+    }
+
+    /* yaltirab o‘tish */
+    @keyframes shine {
+        0% {
+            left: -75%;
+        }
+        60% {
+            left: 125%;
+        }
+        100% {
+            left: 125%;
+        }
+    }
+
+
+    /* ================== PROFESSIONAL BUTTONS ================== */
+    .pro-btn {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 24px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        width: 100%;
+        text-align: left;
+        backdrop-filter: blur(10px);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    /* BUTTON LAYERS */
+    .pro-btn:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.2), 
+            rgba(255, 255, 255, 0.05));
+        z-index: 1;
+    }
+
+    .pro-btn:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.2), 
+            transparent);
+        transition: 0.5s;
+    }
+
+    /* ICON AND TEXT */
+    .pro-btn i {
+        font-size: 1.3rem;
+        z-index: 2;
+        position: relative;
+        transition: transform 0.3s;
+    }
+
+    .pro-btn span {
+        z-index: 2;
+        position: relative;
+        flex: 1;
+    }
+
+    /* HOVER EFFECTS */
+    .pro-btn:hover:after {
+        left: 100%;
+    }
+
+    .pro-btn:hover i {
+        transform: scale(1.3) rotate(10deg);
+    }
+
+    .pro-btn:hover {
+        transform: translateX(8px) scale(1.05);
+        box-shadow: 
+            0 15px 40px rgba(0, 0, 0, 0.3),
+            0 0 20px rgba(255, 255, 255, 0.2),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    /* ACTIVE STATE */
+    .pro-btn:active {
+        transform: translateX(4px) scale(0.98);
+        transition: all 0.1s;
+    }
+
+    /* ================== INDIVIDUAL BUTTON COLORS ================== */
+
+    /* PROFILE BUTTON */
+    .btn-profile {
+        background: linear-gradient(135deg, 
+            #667eea 0%, 
+            #764ba2 50%, 
+            #f093fb 100%);
+        color: white !important;
+        animation: profileGlow 3s infinite;
+    }
+
+    @keyframes profileGlow {
+        0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.6); }
+        50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.9); }
+    }
+
+    /* BARABAN BUTTON */
+    .btn-baraban {
+        background: linear-gradient(135deg, 
+            #f093fb 0%, 
+            #f5576c 50%, 
+            #ff8a00 100%);
+        color: white !important;
+        animation: barabanSpin 2s infinite linear;
+    }
+
+    @keyframes barabanSpin {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+
+    /* DASHBOARD BUTTON */
+    .btn-dashboard {
+        background: linear-gradient(135deg, 
+            #4facfe 0%, 
+            #00f2fe 50%, 
+            #00b09b 100%);
+        color: white !important;
+        animation: dashboardFlow 4s infinite;
+    }
+
+    @keyframes dashboardFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* CLIENTS BUTTON */
+    .btn-clients {
+        background: linear-gradient(135deg, 
+            #43e97b 0%, 
+            #38f9d7 50%, 
+            #20e3b2 100%);
+        color: #2c3e50 !important;
+        animation: clientsPulse 3s infinite;
+    }
+
+    @keyframes clientsPulse {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 20px rgba(67, 233, 123, 0.6);
+        }
+        50% { 
+            box-shadow: 0 0 40px rgba(67, 233, 123, 0.9);
+        }
+    }
+
+    /* MEDIA BUTTON */
+    .btn-media {
+        background: linear-gradient(135deg, 
+            #fa709a 0%, 
+            #fee140 50%, 
+            #ff9a9e 100%);
+        color: #2c3e50 !important;
+        animation: mediaFlash 3s infinite;
+    }
+
+    @keyframes mediaFlash {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.9; }
+    }
+
+    /* GIFT BUTTON */
+    .btn-gift {
+        background: linear-gradient(135deg, 
+            #ff9a9e 0%, 
+            #fad0c4 50%, 
+            #a1c4fd 100%);
+        color: #2c3e50 !important;
+        animation: giftSparkle 3s infinite;
+    }
+
+    @keyframes giftSparkle {
+        0% { 
+            box-shadow: 0 0 10px rgba(255, 154, 158, 0.6),
+                        0 0 20px rgba(255, 154, 158, 0.4); 
+        }
+        100% { 
+            box-shadow: 0 0 20px rgba(255, 154, 158, 0.9),
+                        0 0 40px rgba(255, 154, 158, 0.6); 
+        }
+    }
+
+    /* SETTINGS BUTTON */
+    .btn-settings {
+        background: linear-gradient(135deg, 
+            #a8edea 0%, 
+            #fed6e3 50%, 
+            #f8edeb 100%);
+        color: #2c3e50 !important;
+        animation: settingsRotate 10s infinite linear;
+    }
+
+    @keyframes settingsRotate {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+
+    /* ADMIN BUTTON */
+    .btn-admin {
+        background: linear-gradient(135deg, 
+            #d4fc79 0%, 
+            #96e6a1 50%, 
+            #d4fc79 100%);
+        color: #2c3e50 !important;
+        animation: adminShine 3s infinite;
+    }
+
+    @keyframes adminShine {
+        0% { filter: hue-rotate(0deg); }
+        100% { filter: hue-rotate(360deg); }
+    }
+
+    /* REVIEWS BUTTON */
+    .btn-reviews {
+        background: linear-gradient(135deg, 
+            #8b0000 0%, 
+            #c1121f 50%, 
+            #ff4d4d 100%);
+        color: white !important;
+        animation: reviewsPulse 2.5s infinite;
+    }
+
+    @keyframes reviewsPulse {
+        0%, 100% { 
+            box-shadow: 0 0 15px rgba(193, 18, 31, 0.6),
+                        0 0 30px rgba(193, 18, 31, 0.3); 
+        }
+        50% { 
+            box-shadow: 0 0 30px rgba(255, 77, 77, 0.9),
+                        0 0 60px rgba(255, 77, 77, 0.6); 
+        }
+    }
+
+    /* ================== POMEGRANATE BUTTON ENHANCED ================== */
+    .pomegranate-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 32px;
+        border-radius: 50px;
+        background: linear-gradient(135deg, 
+            #8b0000 0%, 
+            #c1121f 30%, 
+            #ff4d4d 70%, 
+            #ff8e8e 100%);
+        color: white !important;
+        font-weight: 700;
+        text-decoration: none;
+        overflow: hidden;
+        box-shadow: 
+            0 10px 40px rgba(193, 18, 31, 0.6),
+            0 0 0 2px rgba(255, 255, 255, 0.2),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
+        animation: pomegranateGlow 2.5s infinite alternate;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin: 15px 0;
+        width: 100%;
+        justify-content: center;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+    }
+
+    .pomegranate-btn .spark {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255, 255, 255, 0.8),
+            transparent
+        );
+        animation: shine 3s infinite;
+        filter: blur(10px);
+    }
+
+    .pomegranate-btn .text,
+    .pomegranate-btn i {
+        position: relative;
+        z-index: 2;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .pomegranate-btn i {
+        font-size: 1.5rem;
+        animation: iconFloat 3s infinite ease-in-out;
+    }
+
+    @keyframes pomegranateGlow {
+        0% {
+            box-shadow: 
+                0 10px 30px rgba(193, 18, 31, 0.6),
+                0 0 0 2px rgba(255, 77, 77, 0.3);
+            transform: scale(1);
+        }
+        100% {
+            box-shadow: 
+                0 20px 60px rgba(255, 77, 77, 0.9),
+                0 0 0 4px rgba(255, 255, 255, 0.4),
+                inset 0 0 30px rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+    }
+
+    @keyframes shine {
+        0% {
+            left: -100%;
+            opacity: 0;
+        }
+        20% {
+            opacity: 1;
+        }
+        80% {
+            opacity: 1;
+        }
+        100% {
+            left: 200%;
+            opacity: 0;
+        }
+    }
+
+    @keyframes iconFloat {
+        0%, 100% { 
+            transform: translateY(0) rotate(0deg); 
+        }
+        50% { 
+            transform: translateY(-5px) rotate(5deg); 
+        }
+    }
+
+    .pomegranate-btn:hover {
+        transform: scale(1.1) rotate(-2deg);
+        box-shadow: 
+            0 25px 80px rgba(255, 77, 77, 1),
+            0 0 0 3px rgba(255, 255, 255, 0.5),
+            inset 0 0 40px rgba(255, 255, 255, 0.3);
+        animation-play-state: paused;
+    }
+
+    .pomegranate-btn:active {
+        transform: scale(0.98) rotate(0deg);
+        transition: all 0.1s;
+    }
+
+    /* ================== BUTTON CONTAINERS ================== */
+    .btn-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 25px 0;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn-row .pro-btn {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    /* ================== RESPONSIVE BUTTONS ================== */
+    @media (max-width: 768px) {
+        .pro-btn {
+            padding: 14px 20px;
+            font-size: 0.95rem;
+        }
+        
+        .pomegranate-btn {
+            padding: 16px 24px;
+            font-size: 1rem;
+        }
+        
+        .btn-row {
+            flex-direction: column;
+        }
+        
+        .btn-row .pro-btn {
+            min-width: 100%;
+        }
+    }
+
+    /* ================== BUTTON GROUP STYLING ================== */
+    .button-group {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 25px 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .button-group-title {
+        font-size: 1.2rem;
+        color: white;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* ================== SPECIAL EFFECTS ================== */
+    .ripple {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ripple:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+        transform: translate(-50%, -50%);
+        animation: rippleEffect 0.6s linear;
+    }
+
+    @keyframes rippleEffect {
+        to {
+            width: 300px;
+            height: 300px;
+            opacity: 0;
+        }
+    }
+
+    /* ================== DARK MODE ADJUSTMENTS ================== */
+    .dark-mode .pro-btn {
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .dark-mode .button-group {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-reklama{
+    background: linear-gradient(45deg, #ff512f, #dd2476);
+    color: white;
+    }
+
+    .btn-reklama:hover{
+        opacity: 0.85;
+    }
+    .ad-banner{
+        padding:15px;
+        border-radius:14px;
+        color:white;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .ad-link{
+        background:white;
+        color:black;
+        padding:8px 14px;
+        border-radius:8px;
+        text-decoration:none;
+        font-weight:600;
+    }
+
+</style>
+
+</head>
+
+<body class="{% if request.user.is_authenticated and request.user.profile.dark_mode %}dark-mode{% endif %}">
+{% if messages %}
+    <div id="messages-container">
+        {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const messages = document.querySelectorAll('#messages-container .message');
+            messages.forEach(msg => msg.remove());
+        }, 5000);
+    </script>
+{% endif %}
+
+<!-- Left Side - Main Content -->
+<div class="main-content">
+    <header>
+        <div class="theme-indicator" id="themeIndicator">
+            <span id="themeText">🌞</span>
+        </div>
+        <h1><i class="fas fa-rug logo"></i> ANOR GILAM YUVISH</h1>
+        <p>Yuksak sifat va ishonch - 10 yildan ortiq tajriba</p>
+    </header>
+
+    <!-- VIDEO VA SURATLAR GALEREYASI -->
+    <div class="section">
+        <h2><i class="fas fa-photo-video"></i> Video va Suratlar Galereyasi</h2>
+        <p>Gilam yuvish jarayonidan video va suratlar:</p>
+
+        <!-- 1. REKLAMA BANNERI (YUQORI QISMI) -->
+        <div class="ad-banner" style="background: {{ ad.color }}">
+
+            <div class="ad-text">
+                <h3>{{ ad.title }}</h3>
+                <p>{{ ad.description }}</p>
+            </div>
+
+            {% if ad.ad_type == "image" and ad.image %}
+                <a href="{{ ad.image.url }}" target="_blank" class="ad-link">
+                    📷 Rasmni ko‘rish
+                </a>
+            {% endif %}
+
+            {% if ad.ad_type == "video" and ad.video %}
+                <a href="{{ ad.video.url }}" target="_blank" class="ad-link">
+                    ▶ Videoni ko‘rish
+                </a>
+            {% endif %}
+
+        </div>
+
+
+        <!-- 2. ASOSIY KONTEYNER (2 QISMDAN) -->
+        <div class="media-gallery">
+            <!-- CHAP TARAF: VIDEOLAR -->
+            <div class="videos-column">
+                <div class="section-header">
+                    <h3><i class="fas fa-video"></i> Videolar</h3>
+                    <a href="{% url 'video_list' %}" class="view-all">Barchasini ko'rish <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="videos-list">
+                    {% for video in videos|slice:":4" %}
+                    <div class="video-card">
+                        <div class="video-preview">
+                            <div class="thumbnail">
+                                {% if video.thumbnail %}
+                                    <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                                {% else %}
+                                    <div class="thumbnail-placeholder">
+                                        <i class="fas fa-play-circle"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="play-overlay" onclick="playVideo('{{ video.video_url }}', '{{ video.title }}')">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <span class="duration">{{ video.duration }}</span>
+                            </div>
+                            <div class="video-details">
+                                <h4>{{ video.title|truncatechars:40 }}</h4>
+                                <p class="description">{{ video.description|truncatechars:80 }}</p>
+                                <div class="video-meta">
+                                    <span><i class="far fa-calendar"></i> {{ video.created_at|date:"d.m.Y" }}</span>
+                                    <span><i class="far fa-eye"></i> {{ video.views|intcomma }}</span>
+                                    <span><i class="far fa-thumbs-up"></i> {{ video.likes|default:0 }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-media">
+                        <i class="fas fa-video-slash"></i>
+                        <p>Videolar hozircha mavjud emas</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- O'NG TARAF: SURATLAR -->
+            <div class="photos-column">
+                <div class="section-header">
+                    <h3><i class="fas fa-images"></i> Suratlar</h3>
+                    <a href="{% url 'photo_list' %}" class="view-all">Barchasini ko'rish <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="photos-grid">
+                    {% for photo in photos|slice:":6" %}
+                    <div class="photo-card">
+                        <div class="photo-container">
+                            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" 
+                                 onclick="openImageModal('{{ photo.image.url }}', '{{ photo.title }}')">
+                            <div class="photo-overlay">
+                                <button class="btn-view" onclick="openImageModal('{{ photo.image.url }}', '{{ photo.title }}')">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="photo-info">
+                            <h4>{{ photo.title|truncatechars:30 }}</h4>
+                            <p>{{ photo.description|truncatechars:50 }}</p>
+                            <div class="photo-meta">
+                                <span><i class="far fa-calendar"></i> {{ photo.created_at|date:"d.m.Y" }}</span>
+                                <span><i class="far fa-heart"></i> {{ photo.likes|default:0 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-media">
+                        <i class="fas fa-image"></i>
+                        <p>Suratlar hozircha mavjud emas</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- VIDEO MODAL -->
+        <div id="videoModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="videoModalTitle"></h3>
+                    <span class="close" onclick="closeVideoModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <video id="modalVideoPlayer" controls style="width:100%;">
+                        <source src="" type="video/mp4">
+                        Sizning brauzeringiz video elementni qo'llab-quvvatlamaydi.
+                    </video>
+                </div>
+            </div>
+        </div>
+
+        <!-- SURAT MODAL -->
+        <div id="imageModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="imageModalTitle"></h3>
+                    <span class="close" onclick="closeImageModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" src="" alt="" style="width:100%;">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-download" onclick="downloadImage()">
+                        <i class="fas fa-download"></i> Yuklab olish
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2-BO‘LIM: BUYURTMA BERISH -->
+    <div class="section">
+        <form method="POST" action="{% url 'create_order' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Ismingiz</label>
+                <input type="text" name="name" id="name" placeholder="Ismingizni kiriting" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Telefon raqam</label>
+                <input type="text" name="phone" id="phone" placeholder="+998 (XX) XXX-XX-XX" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Manzil</label>
+                <input type="text" name="address" id="address" placeholder="Manzilingizni kiriting" required>
+            </div>
+
+            <div class="form-group">
+                <label for="carpet_type">Gilam turi</label>
+                <select name="carpet_type" id="carpet_type">
+                    {% for carpet in carpets %}
+                    <option value="{{ carpet.id }}">{{ carpet.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="other_carpet_name">Boshqa gilam nomi (ixtiyoriy)</label>
+                <input type="text" name="other_carpet_name" id="other_carpet_name"
+                       placeholder="Agar ro'yxatda yo'q bo'lsa">
+            </div>
+
+            <div class="form-group">
+                <label for="date">Buyurtma kuni</label>
+                <input type="date" name="date" id="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Izoh (ixtiyoriy)</label>
+                <textarea name="comment" id="comment" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-paper-plane"></i> Buyurtma yuborish
+            </button>
+        </form>
+    </div>
+
+    <!-- 3-BO‘LIM: XIZMATLAR VA NARXLAR -->
+    <div class="section">
+        <h2><i class="fas fa-tags"></i> Xizmatlar va Narxlar</h2>
+        <p>Gilam turlari bo'yicha narxlar (m² uchun):</p>
+
+        {% for carpet in carpets %}
+        <div class="price-box">
+            <div class="price-info">
+                <h3>{{ carpet.name }}</h3>
+                <p>{{ carpet.description }}</p>
+            </div>
+            <div class="price">{{ carpet.price_per_m2 }} so'm</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Right Side - Admin Panel -->
+<div class="admin-panel">
+    <div class="button-group">
+    <h3 class="button-group-title"><i class="fas fa-th-large"></i> PROFIL </h3>
+    <ul class="admin-menu">
+        <li>
+            <a href="{% url 'profile' %}" class="pro-btn btn-profile">
+                <i class="fas fa-user"></i>
+                <span>Profil</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'baraban' %}" class="pro-btn btn-baraban">
+                <i class="fas fa-dharmachakra"></i>
+                <span>Omad Barabani</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'boshqaruv' %}" class="pro-btn btn-settings">
+                <i class="fas fa-cog"></i>
+                <span>Sozlamalar</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+{% if request.user.is_superuser %}
+<div class="button-group">
+    <h3 class="button-group-title"><i class="fas fa-crown"></i> Admin Panel</h3>
+    <ul class="admin-menu">
+        <li>
+            <a href="{% url 'sozlamalar' %}" class="pro-btn btn-dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Boshqaruv paneli</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'clients' %}" class="pro-btn btn-clients">
+                <i class="fas fa-users"></i>
+                <span>Mijozlar</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'video_rasim' %}" class="pro-btn btn-media">
+                <i class="fas fa-photo-video"></i>
+                <span>Video & Rasim</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'sovga_management' %}" class="pro-btn btn-gift">
+                <i class="fas fa-gift"></i>
+                <span>Sovg'alarni boshqarish</span>
+            </a>
+        </li>
+
+        {% if user.is_staff %}
+            <li>
+                <a href="{% url 'foydalanuvchilar_list' %}" class="pro-btn btn-admin">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Foydalanuvchilar</span>
+                </a>
+            </li>
+        {% endif %}
+
+        <li>
+            <a href="{% url 'create_ad' %}" class="pro-btn btn-reklama">
+                <i class="fas fa-photo-video"></i>
+                <span>➕ REKLAMA</span>
+            </a>
+        </li>
+
+    </ul>
+</div>
+{% endif %}
+
+
+<!-- YIRIK POMEGRANATE BUTTON -->
+
+
+    
+    <div class="stats">
+        <h3><i class="fas fa-chart-line"></i> Bugun statistikasi</h3>
+        <div class="stat-item">
+            <span>Bugun jami kirishlar:</span>
+            <span class="stat-value">{{ stats.today_visits }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Mehmonlar:</span>
+            <span class="stat-value">{{ stats.guests_today }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Foydalanuvchilar:</span>
+            <span class="stat-value">{{ stats.users_today }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Yangi buyurtmalar:</span>
+            <span class="stat-value">{{ stats.new_orders }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Jarayondagilar:</span>
+            <span class="stat-value">{{ stats.processing_orders }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Tugatilgan ishlar:</span>
+            <span class="stat-value">{{ stats.completed_orders }}</span>
+        </div>
+    </div>
+
+    <li class="nav-item">
+        <a class="nav-link pomegranate-btn" href="{% url 'reviews_list' %}">
+            <span class="spark"></span>
+            <i class="fas fa-comments"></i>
+            <span class="text">Sharhlar</span>
+        </a>
+    </li>
+
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+</div>
+
+<!-- JavaScript -->
+<script src="{% static 'js/scripts.js' %}"></script>
+
+<script>
+    // VIDEO VA SURATLAR GALEREYASI JAVASCRIPT KODLARI
+    
+    // Promo timer
+    function startPromoTimer() {
+        let seconds = 24 * 60 * 60; // 24 soat
+        
+        const timer = setInterval(() => {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            document.getElementById('promoTimer').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            
+            if (seconds <= 0) {
+                clearInterval(timer);
+            } else {
+                seconds--;
+            }
+        }, 1000);
+    }
+
+    // Video o'ynatish
+    function playVideo(url, title) {
+        const modal = document.getElementById('videoModal');
+        const videoPlayer = document.getElementById('modalVideoPlayer');
+        const titleElement = document.getElementById('videoModalTitle');
+        
+        titleElement.textContent = title;
+        videoPlayer.src = url;
+        modal.style.display = 'flex';
+        videoPlayer.play();
+    }
+
+    // Suratni ochish
+    function openImageModal(url, title) {
+        const modal = document.getElementById('imageModal');
+        const imageElement = document.getElementById('modalImage');
+        const titleElement = document.getElementById('imageModalTitle');
+        
+        titleElement.textContent = title;
+        imageElement.src = url;
+        modal.style.display = 'flex';
+    }
+
+    // Modalni yopish funksiyalari
+    function closeVideoModal() {
+        const modal = document.getElementById('videoModal');
+        const videoPlayer = document.getElementById('modalVideoPlayer');
+        
+        modal.style.display = 'none';
+        videoPlayer.pause();
+        videoPlayer.currentTime = 0;
+    }
+
+    function closeImageModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+
+    // Reklamani yopish
+    function closeAd() {
+        document.querySelector('.ad-banner').style.display = 'none';
+    }
+
+    // Promo tafsilotlari
+    function showPromoDetails() {
+        alert('Maxsus chegirma: 3 ta va undan ortiq gilam yuvish uchun 10% chegirma. Taklif faqat bugun amal qiladi!');
+    }
+
+    // Rasmni yuklab olish
+    function downloadImage() {
+        const imageUrl = document.getElementById('modalImage').src;
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = 'anor-gilam-' + Date.now() + '.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Tashqariga bosilsa modal yopiladi
+    window.addEventListener('click', function(event) {
+        const videoModal = document.getElementById('videoModal');
+        const imageModal = document.getElementById('imageModal');
+        
+        if (event.target === videoModal) {
+            closeVideoModal();
+        }
+        if (event.target === imageModal) {
+            closeImageModal();
+        }
+    });
+
+    // Sahifa yuklanganda timer ishga tushadi
+    document.addEventListener('DOMContentLoaded', function() {
+        startPromoTimer();
+        
+        // Video va surat modal elementlarini tekshirish
+        const videoModal = document.getElementById('videoModal');
+        const imageModal = document.getElementById('imageModal');
+        
+        if (!videoModal) {
+            console.log('Video modal topilmadi');
+        }
+        
+        if (!imageModal) {
+            console.log('Image modal topilmadi');
+        }
+    });
+        document.querySelectorAll('.pomegranate-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+
+        // Button click effects
+    document.querySelectorAll('.pro-btn, .pomegranate-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Ripple effect
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.7);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                width: ${size}px;
+                height: ${size}px;
+                top: ${y}px;
+                left: ${x}px;
+                pointer-events: none;
+            `;
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+
+    // Button hover sound effect (optional)
+    document.querySelectorAll('.pro-btn, .pomegranate-btn').forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.3s ease';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        });
+    });
+
+    // Add CSS for ripple effect
+    const style = document.createElement('style');
+    style.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    `;
+    document.head.appendChild(style);
+
+    @keyframes glow{
+    0%{box-shadow:0 0 5px white;}
+    50%{box-shadow:0 0 20px yellow;}
+    100%{box-shadow:0 0 5px white;}
+    }
+
+    .ad-banner{
+        animation: glow 2s infinite;
+    }
+
+</script>
+
+
+</body>
+</html>
