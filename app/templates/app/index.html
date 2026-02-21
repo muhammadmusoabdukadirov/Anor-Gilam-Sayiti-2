@@ -1314,10 +1314,16 @@
     <h3 class="button-group-title"><i class="fas fa-th-large"></i> PROFIL </h3>
     <ul class="admin-menu">
         <li>
-            <a href="{% url 'profile' %}" class="pro-btn btn-profile">
-                <i class="fas fa-user"></i>
-                <span>Profil</span>
-            </a>
+            {% if user.is_authenticated %}
+            <div style="display:flex;align-items:center;gap:10px;">
+
+                <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}/static/images/default_avatar.png{% endif %}"
+                    style="width:35px;height:35px;border-radius:50%;object-fit:cover;">
+
+                <span>{{ user.first_name|default:user.username }}</span>
+
+            </div>
+            {% endif %}
         </li>
 
         <li>

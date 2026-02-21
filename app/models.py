@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 import random
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from datetime import timedelta
 
 # Gilam turlari modeli
 class CarpetType(models.Model):
@@ -65,6 +67,15 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    @receiver(post_save, sender=User)
+    def create_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_profile(sender, instance, **kwargs):
+        instance.profile.save()
 
 
 class VisitLog(models.Model):
@@ -221,11 +232,6 @@ class Review(models.Model):
 
 
 # ____________________________________
-
-
-from django.db import models
-from django.utils import timezone
-from datetime import timedelta
 
 class Advertisement(models.Model):
 

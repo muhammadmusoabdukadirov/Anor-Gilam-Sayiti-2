@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path
 from .views import (
     index, create_order, clients, sozlamalar, update_order_status, 
-    delete_order, boshqaruv_view, profile_view, video_rasim, add_video, 
+    delete_order, boshqaruv, profile_view, video_rasim, add_video, 
     add_photo, delete_video, delete_photo, delete_media, photo_list, 
     baraban, spin_baraban, sovga_management, foydalanuvchilar_list, 
     update_yutuq, get_yutuq_info, mark_yutuq_used, foydalanuvchi_detail,
@@ -16,7 +16,7 @@ urlpatterns = [
     path('create_order/', create_order, name='create_order'),
     path('clients/', clients, name='clients'),
     path('sozlamalar/', sozlamalar, name='sozlamalar'),
-    path('boshqaruv/', boshqaruv_view, name='boshqaruv'),
+    path('boshqaruv/', boshqaruv, name='boshqaruv'),           
     path('order/<int:order_id>/update-status/', update_order_status, name='update_order_status'),
     path('profile/', profile_view, name='profile'),
     path('media/', video_rasim, name='video_rasim'),

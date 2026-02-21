@@ -1,127 +1,332 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<title>Boshqaruv</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #1e1e1e;
-        color: #f0f0f0;
-        padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boshqaruv paneli</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .container {
-        max-width: 700px;
-        margin: 0 auto;
-        background-color: #2c2c2c;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.7);
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #ff4c4c;
-    }
+        /* Animatsion fon */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    .accordion-btn {
-        width: 100%;
-        background-color: #ff4c4c;
-        color: #fff;
-        padding: 15px;
-        text-align: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        font-size: 16px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        transition: background-color 0.3s;
-    }
+        /* Yaltiroq effektlar */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+        }
 
-    .accordion-btn:hover { background-color: #e03f3f; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
 
-    .accordion-content {
-        background-color: #3a3a3a;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-        border-radius: 5px;
-        padding: 0 20px;
-    }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
 
-    .accordion-content.active {
-        padding: 20px;
-        max-height: 1000px;
-    }
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: float 6s ease-in-out infinite;
+        }
 
-    input {
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 4px;
-        border: 1px solid #ff4c4c;
-        background-color: #2c2c2c;
-        color: #f0f0f0;
-        box-sizing: border-box;
-        margin-bottom: 15px;
-    }
+        .header h1 {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
 
-    button.submit-btn {
-        background-color: #ff4c4c;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-    }
+        .header p {
+            color: #555;
+            text-align: center;
+            font-size: 1.1em;
+        }
 
-    button.submit-btn:hover { background-color: #e03f3f; }
+        /* Asosiy sahifaga tugma */
+        .main-page-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            animation: glow 3s ease-in-out infinite;
+        }
 
-    .toggle-password {
-        margin-bottom: 15px;
-        cursor: pointer;
-        background-color: #444;
-        color: #fff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 14px;
-    }
+        .main-page-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
 
-    /* Messages */
-    #messages-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
-    .message {
-        padding: 10px 20px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        font-weight: bold;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-        transition: opacity 0.5s ease;
-    }
-    .message.success { background-color: #28a745; color: #fff; }
-    .message.error { background-color: #dc3545; color: #fff; }
-</style>
+        /* Accordion */
+        .accordion-item {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .accordion-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .accordion-btn {
+            width: 100%;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-btn::after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-btn.active::after {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .accordion-content.active {
+            max-height: 800px;
+        }
+
+        .form-container {
+            padding: 25px;
+        }
+
+        /* Form elementlari */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .help-text {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        /* Toggle parol tugmasi */
+        .toggle-password {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Submit tugma */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Messages */
+        #messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .message {
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #48c774, #00d1b2);
+            color: white;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #f14668, #ff3860);
+            color: white;
+        }
+
+        .message.warning {
+            background: linear-gradient(135deg, #ffe08a, #ffdd57);
+            color: #333;
+        }
+
+        /* Foydalanuvchi ma'lumoti */
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: white;
+            text-align: center;
+            font-size: 1.1em;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-page-btn {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Boshqaruv</h1>
+    <!-- Header -->
+    <div class="header">
+        <h1>✨ Boshqaruv paneli</h1>
+        {% if user.is_authenticated %}
+            <div class="user-info">
+                👤 Xush kelibsiz, <strong>{{ user.username }}</strong>!
+            </div>
+        {% else %}
+            <p>🔐 Tizimga kiring yoki ro'yxatdan o'ting</p>
+        {% endif %}
+    </div>
 
-    <div style="text-align:center; margin-bottom:20px;">
-        <a href="{% url 'index' %}"
-           class="submit-btn"
-           style="text-decoration:none;
-                  display:inline-block;
-                  background-color:#ff4c4c;
-                  color:white;
-                  padding:15px 30px;
-                  font-size:20px;
-                  border-radius:8px;
-                  font-weight:bold;">
-            Asosiy sahifaga
+    <!-- Asosiy sahifaga tugma -->
+    <div style="text-align: center;">
+        <a href="{% url 'index' %}" class="main-page-btn">
+            🏠 Asosiy sahifaga
         </a>
     </div>
 
@@ -129,108 +334,184 @@
     {% if messages %}
     <div id="messages-container">
         {% for message in messages %}
-            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
         {% endfor %}
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const messagesContainer = document.getElementById('messages-container');
-            if(messagesContainer) {
-                setTimeout(() => {
-                    const messages = messagesContainer.querySelectorAll('.message');
-                    messages.forEach(msg => {
-                        msg.style.opacity = '0';
-                        setTimeout(() => msg.remove(), 500);
-                    });
-                }, 5000);
-            }
-        });
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(msg => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100%)';
+                setTimeout(() => msg.remove(), 500);
+            });
+        }, 5000);
     </script>
     {% endif %}
 
- <!-- Register -->
-<button class="accordion-btn" id="register-btn">Ro‘yxatdan o‘tish</button>
-<div class="accordion-content" id="register-content">
-    <form method="post" action="{% url 'boshqaruv' %}">
-        {% csrf_token %}
-        {{ register_form.username.label_tag }}
-        {{ register_form.username }}
-        <small style="color:#ff4c4c">{{ register_form.username.help_text }}</small>
+    <!-- Ro'yxatdan o'tish -->
+    <div class="accordion-item">
+        <button class="accordion-btn" id="register-btn">
+            📝 Ro'yxatdan o'tish
+        </button>
+        <div class="accordion-content" id="register-content">
+            <div class="form-container">
+                <form method="post" action="{% url 'boshqaruv' %}">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="{{ register_form.username.id_for_label }}">
+                            {{ register_form.username.label }}
+                        </label>
+                        {{ register_form.username }}
+                        {% if register_form.username.help_text %}
+                            <small class="help-text">{{ register_form.username.help_text|safe }}</small>
+                        {% endif %}
+                    </div>
 
-        {{ register_form.password1.label_tag }}
-        {{ register_form.password1 }}
-        <small style="color:#ff4c4c">{{ register_form.password1.help_text }}</small>
-        <button type="button" class="toggle-password" data-target="{{ register_form.password1.id_for_label }}">Ko‘rsat</button>
+                    <div class="form-group">
+                        <label for="{{ register_form.password1.id_for_label }}">
+                            {{ register_form.password1.label }}
+                        </label>
+                        {{ register_form.password1 }}
+                        <button type="button" class="toggle-password" data-target="{{ register_form.password1.id_for_label }}">👁️ Ko'rsat</button>
+                        {% if register_form.password1.help_text %}
+                            <small class="help-text">{{ register_form.password1.help_text|safe }}</small>
+                        {% endif %}
+                    </div>
 
-        {{ register_form.password2.label_tag }}
-        {{ register_form.password2 }}
-        <small style="color:#ff4c4c">{{ register_form.password2.help_text }}</small>
-        <button type="button" class="toggle-password" data-target="{{ register_form.password2.id_for_label }}">Ko‘rsat</button>
+                    <div class="form-group">
+                        <label for="{{ register_form.password2.id_for_label }}">
+                            {{ register_form.password2.label }}
+                        </label>
+                        {{ register_form.password2 }}
+                        <button type="button" class="toggle-password" data-target="{{ register_form.password2.id_for_label }}">👁️ Ko'rsat</button>
+                        {% if register_form.password2.help_text %}
+                            <small class="help-text">{{ register_form.password2.help_text|safe }}</small>
+                        {% endif %}
+                    </div>
 
-        <button type="submit" name="action" value="register" class="submit-btn">Ro‘yxatdan o‘tish</button>
-    </form>
-</div>
+                    <button type="submit" name="action" value="register" class="submit-btn">
+                        ✨ Ro'yxatdan o'tish
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <!-- Login -->
-<button class="accordion-btn" id="login-btn">Kirish</button>
-<div class="accordion-content" id="login-content">
-    <form method="post" action="{% url 'boshqaruv' %}">
-        {% csrf_token %}
-        {{ login_form.username.label_tag }}
-        {{ login_form.username }}
+    <!-- Kirish -->
+    <div class="accordion-item">
+        <button class="accordion-btn" id="login-btn">
+            🔑 Tizimga kirish
+        </button>
+        <div class="accordion-content" id="login-content">
+            <div class="form-container">
+                <form method="post" action="{% url 'boshqaruv' %}">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="{{ login_form.username.id_for_label }}">
+                            {{ login_form.username.label }}
+                        </label>
+                        {{ login_form.username }}
+                    </div>
 
-        {{ login_form.password.label_tag }}
-        {{ login_form.password }}
-        <button type="button" class="toggle-password" data-target="{{ login_form.password.id_for_label }}">Ko‘rsat</button>
+                    <div class="form-group">
+                        <label for="{{ login_form.password.id_for_label }}">
+                            {{ login_form.password.label }}
+                        </label>
+                        {{ login_form.password }}
+                        <button type="button" class="toggle-password" data-target="{{ login_form.password.id_for_label }}">👁️ Ko'rsat</button>
+                    </div>
 
-        <button type="submit" name="action" value="login" class="submit-btn">Kirish</button>
-    </form>
-</div>
+                    <button type="submit" name="action" value="login" class="submit-btn">
+                        🚀 Kirish
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <!-- Logout -->
-<button class="accordion-btn">Chiqish</button>
-<div class="accordion-content">
-    <form method="post" action="{% url 'boshqaruv' %}">
-        {% csrf_token %}
-        <button type="submit" name="action" value="logout" class="submit-btn">Chiqish</button>
-    </form>
-</div>
+    <!-- Chiqish (faqat login bo'lsa) -->
+    {% if user.is_authenticated %}
+    <div class="accordion-item">
+        <button class="accordion-btn">
+            👋 Tizimdan chiqish
+        </button>
+        <div class="accordion-content">
+            <div class="form-container">
+                <form method="post" action="{% url 'boshqaruv' %}">
+                    {% csrf_token %}
+                    <p style="margin-bottom: 20px; color: #333;">Haqiqatan ham tizimdan chiqmoqchimisiz?</p>
+                    <button type="submit" name="action" value="logout" class="submit-btn" style="background: linear-gradient(135deg, #f14668, #ff3860);">
+                        👋 Chiqish
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
 </div>
 
 <script>
-    // Accordion
-    const accButtons = document.querySelectorAll('.accordion-btn');
-    accButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            btn.nextElementSibling.classList.toggle('active');
+    // Accordion funksiyasi
+    document.querySelectorAll('.accordion-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Boshqa accordionlarni yopish
+            if (!this.classList.contains('active')) {
+                document.querySelectorAll('.accordion-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                document.querySelectorAll('.accordion-content').forEach(c => {
+                    c.classList.remove('active');
+                });
+            }
+            
+            // Hozirgini ochish/yopish
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            content.classList.toggle('active');
         });
     });
 
-    // Password toggle
+    // Parol ko'rsatish/yashirish
     document.querySelectorAll('.toggle-password').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
+        btn.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
             const input = document.getElementById(targetId);
-            if(input.type === "password"){
-                input.type = "text";
-                btn.textContent = "Yashir";
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.textContent = '🔒 Yashirish';
             } else {
-                input.type = "password";
-                btn.textContent = "Ko‘rsat";
+                input.type = 'password';
+                this.textContent = '👁️ Ko\'rsat';
             }
         });
     });
 
-    // Sahifadan link orqali register/login ochish
+    // Hash orqali accordion ochish
     document.addEventListener('DOMContentLoaded', function() {
-        const urlHash = window.location.hash;
-        if(urlHash === '#register'){
-            document.getElementById('register-content').classList.add('active');
+        const hash = window.location.hash;
+        if (hash === '#register') {
+            document.getElementById('register-btn').click();
+        } else if (hash === '#login') {
+            document.getElementById('login-btn').click();
         }
-        if(urlHash === '#login'){
-            document.getElementById('login-content').classList.add('active');
-        }
+    });
+
+    // Inputlarga animatsiya
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
     });
 </script>
 

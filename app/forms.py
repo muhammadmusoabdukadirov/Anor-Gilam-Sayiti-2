@@ -15,26 +15,52 @@ class CarpetTypeForm(forms.ModelForm):
             'price_per_m2': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Narx'}),
         }
 
-class CustomUserCreationForm(UserCreationForm):
+
+# ✅ SODDALASHTIRILGAN REGISTRATSIYA FORMASI
+class SimpleUserCreationForm(UserCreationForm):
     username = forms.CharField(
         label="Foydalanuvchi nomi",
         max_length=150,
-        help_text="Faqat harflar, raqamlar va @/./+/-/_ belgilari ishlatilishi mumkin."
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Foydalanuvchi nomi'}),
+        help_text="<span style='color: #ffd700;'>⚠️ Bo'sh joysiz yozing (masalan: john123)</span>"
     )
+    
     password1 = forms.CharField(
         label="Parol",
-        widget=forms.PasswordInput,
-        help_text="Parol kamida 8 ta belgidan iborat bo‘lishi, shaxsiy ma’lumotlarga o‘xshamasligi va raqamlar bilan cheklanmasligi kerak."
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Parol'}),
+        help_text="<span style='color: #ffd700;'>⚠️ Kamida 8 ta belgi, bo'sh joysiz</span>"
     )
+    
     password2 = forms.CharField(
-        label="Parolni tasdiqlash",
-        widget=forms.PasswordInput,
-        help_text="Yuqoridagi parolni takror kiriting."
+        label="Parolni tasdiqlang",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Parolni qayta kiriting'}),
+        help_text="<span style='color: #ffd700;'>⚠️ Parolni qayta yozing</span>"
     )
 
     class Meta:
         model = User
         fields = ("username", "password1", "password2")
+
+    # Validatsiyani soddalashtiramiz
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if ' ' in username:
+            raise forms.ValidationError("Foydalanuvchi nomida bo'sh joy bo'lmasligi kerak!")
+        return username
+
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+        if ' ' in password:
+            raise forms.ValidationError("Parolda bo'sh joy bo'lmasligi kerak!")
+        if len(password) < 8:
+            raise forms.ValidationError("Parol kamida 8 ta belgidan iborat bo'lishi kerak!")
+        return password
+
+    def clean_password2(self):
+        password2 = self.cleaned_data.get('password2')
+        if ' ' in password2:
+            raise forms.ValidationError("Parolda bo'sh joy bo'lmasligi kerak!")
+        return password2
 
 
 class MediaForm(forms.ModelForm):
@@ -68,17 +94,14 @@ class MediaForm(forms.ModelForm):
         if media_type == 'photo':
             if not image:
                 raise forms.ValidationError("Rasm tanlangan bo‘lsa, rasm faylini yuklashing kerak.")
-            # Video maydoni ishlamasligi ixtiyoriy
             cleaned_data['video_file'] = None
             cleaned_data['video_url'] = ''
 
         elif media_type == 'video':
             if not (video_file or video_url):
                 raise forms.ValidationError("Video tanlangan bo‘lsa, video fayl yoki video URL qo‘shish kerak.")
-            # Rasm maydoni ishlamasligi ixtiyoriy
             cleaned_data['image'] = None
 
-            # Video fayl validatsiyasi
             if video_file:
                 ext = video_file.name.split('.')[-1].lower()
                 valid_extensions = ['mp4', 'mov', 'avi', 'mkv']
@@ -88,10 +111,6 @@ class MediaForm(forms.ModelForm):
                     raise forms.ValidationError("Video fayl hajmi 50MB dan oshmasligi kerak.")
 
         return cleaned_data
-
-
-
-# ____________________sharx__________________________________
 
 
 class ReviewForm(forms.ModelForm):
@@ -121,9 +140,6 @@ class ReviewForm(forms.ModelForm):
             'comment': 'Sharh'
         }
 
-
-from django import forms
-from .models import Advertisement
 
 class AdForm(forms.ModelForm):
     class Meta:

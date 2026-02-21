@@ -634,23 +634,45 @@
             {% endif %}
             
             <!-- Avatar Section -->
-            <div class="avatar-section">
-                <input type="file" name="avatar" id="avatar" accept="image/*">
-                <div class="avatar-wrapper">
-                    <img id="avatarPreview" 
-                         src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" 
-                         alt="Profil rasmi" 
-                         class="avatar-img">
-                    <div class="avatar-overlay">
-                        <i class="fas fa-camera"></i>
-                        <span>Rasmni o'zgartirish</span>
+            <form method="POST" enctype="multipart/form-data" class="form">
+                {% csrf_token %}
+
+                <!-- AVATAR SECTION -->
+                <div class="avatar-section">
+
+                    <!-- file input -->
+                    <input type="file" name="avatar" id="avatar" accept="image/*" hidden>
+
+                    <!-- avatar image -->
+                    <div class="avatar-wrapper">
+                        <img id="avatarPreview"
+                            src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}"
+                            alt="Profil rasmi"
+                            class="avatar-img">
+
+                        <!-- overlay -->
+                        <label for="avatar" class="avatar-overlay">
+                            <i class="fas fa-camera"></i>
+                            <span>Rasmni o'zgartirish</span>
+                        </label>
                     </div>
+
+                    <!-- change button -->
+                    <label for="avatar" class="avatar-label">
+                        <i class="fas fa-edit"></i>
+                        <span>Avatar yangilash</span>
+                    </label>
+
                 </div>
-                <label for="avatar" class="avatar-label">
-                    <i class="fas fa-edit"></i>
-                    <span>Avatar yangilash</span>
-                </label>
-            </div>
+
+
+                <!-- SAVE BUTTON -->
+                <button type="submit" class="btn btn-primary">
+                    Saqlash
+                </button>
+
+            </form>
+
             
             <!-- Stats Section (Agar statistikalar bo'lsa) -->
             {% if total_spins or total_wins %}

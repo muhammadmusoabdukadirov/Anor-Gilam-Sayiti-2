@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CarpetTypeForm,CustomUserCreationForm, MediaForm, ReviewForm, AdForm
+from .forms import CarpetTypeForm, SimpleUserCreationForm, MediaForm, ReviewForm, AdForm
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -18,7 +18,6 @@ from datetime import datetime, timedelta
 from django.core.paginator import Paginator
 import json
 from . import forms
-
 
 
 
@@ -160,18 +159,66 @@ def delete_order(request, order_id):
     return redirect('clients')
 
 # -------------------------SOZLAMALAR--------------------------------------------
+
+def boshqaruv(request):
+    register_form = SimpleUserCreationForm()
+    login_form = AuthenticationForm()
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        # ✅ SODDALASHTIRILGAN REGISTRATSIYA
+        if action == 'register':
+            register_form = SimpleUserCreationForm(request.POST)
+            if register_form.is_valid():
+                user = register_form.save()
+                login(request, user)
+                messages.success(request, f"Xush kelibsiz, {user.username}! 🎉")
+                return redirect('boshqaruv')
+            else:
+                for field, errors in register_form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{error}")
+        
+        # LOGIN
+        elif action == 'login':
+            login_form = AuthenticationForm(request, data=request.POST)
+            if login_form.is_valid():
+                username = login_form.cleaned_data.get('username')
+                password = login_form.cleaned_data.get('password')
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    messages.success(request, f"Xush kelibsiz, {username}! 👋")
+                    return redirect('boshqaruv')
+            else:
+                messages.error(request, "Login yoki parol xato!")
+        
+        # LOGOUT
+        elif action == 'logout':
+            logout(request)
+            messages.success(request, "Xayr! Tizimdan chiqdingiz. 👋")
+            return redirect('boshqaruv')
+    
+    context = {
+        'register_form': register_form,
+        'login_form': login_form,
+        'user': request.user,
+    }
+    return render(request, 'app/boshqaruv.html', context)
+
+
+@login_required
 def sozlamalar(request):
     add_form = CarpetTypeForm(request.POST or None, prefix="add")
     update_form = None
     selected_carpet = None
 
-    # Qo'shish
     if add_form.is_valid() and 'add-name' in request.POST:
         new_carpet = add_form.save()
         messages.success(request, f"{new_carpet.name} muvaffaqiyatli qo'shildi!")
         return redirect('sozlamalar')
 
-    # Yangilash
     if 'update-id' in request.POST and request.POST['update-id']:
         carpet_id = request.POST.get('update-id')
         selected_carpet = get_object_or_404(CarpetType, id=carpet_id)
@@ -184,7 +231,6 @@ def sozlamalar(request):
     else:
         update_form = CarpetTypeForm(prefix="update")
 
-    # O'chirish – alohida, update-ga bog‘lamay
     if 'delete-id' in request.POST and request.POST['delete-id']:
         carpet_id = request.POST.get('delete-id')
         selected_carpet = get_object_or_404(CarpetType, id=carpet_id)
@@ -199,77 +245,30 @@ def sozlamalar(request):
         'carpets': CarpetType.objects.all(),
     }
     return render(request, 'app/sozlamalar.html', context)
-
-
-def boshqaruv_view(request):
-    register_form = CustomUserCreationForm()
-    login_form = AuthenticationForm()
-
-    if request.method == "POST":
-        action = request.POST.get("action")
-
-        # --- Register ---
-        if action == "register":
-            register_form = CustomUserCreationForm(request.POST)
-            if register_form.is_valid():
-                new_user = register_form.save()  # Foydalanuvchi saqlanadi
-                messages.success(request,
-                                 f"Xush kelibsiz, {new_user.username}! Siz muvaffaqiyatli ro‘yxatdan o‘tdingiz. Iltimos, login qiling.")
-                return redirect("boshqaruv")
-            else:
-                messages.error(request, "Ro‘yxatdan o‘tishda xatolik yuz berdi!")
-
-        # --- Login ---
-        elif action == "login":
-            login_form = AuthenticationForm(data=request.POST)
-            if login_form.is_valid():
-                user = login_form.get_user()
-                login(request, user)
-                messages.success(request, f"Xush kelibsiz, {user.username}!")
-                return redirect("index")
-            else:
-                messages.error(request, "Login yoki parol noto‘g‘ri!")
-
-        # --- Logout ---
-        elif action == "logout":
-            if request.user.is_authenticated:
-                username = request.user.username
-                logout(request)
-                messages.success(request, f"{username}, siz chiqdingiz!")
-            return redirect("index")
-
-    context = {
-        "register_form": register_form,
-        "login_form": login_form,
-    }
-    return render(request, "app/boshqaruv.html", context)
-
-
-@login_required(login_url='boshqaruv')  # Mehmon bo'lsa boshqaruv login sahifasiga yo'naltiriladi
+@login_required(login_url='boshqaruv')
 def profile_view(request):
     user = request.user
-    profile = user.profile  # Profilni olamiz (Profile modeli bilan bog'liq)
+    profile = user.profile
 
     if request.method == 'POST':
-        avatar = request.FILES.get('avatar')
-        username = request.POST.get('username')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
 
-        if avatar:
-            profile.avatar = avatar
-        profile.phone = phone
+        user.username = request.POST.get('username')
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.email = request.POST.get('email')
+
+        profile.phone = request.POST.get('phone')
+
+        if 'avatar' in request.FILES:
+            profile.avatar = request.FILES['avatar']
+
+        user.save()
         profile.save()
 
-        user.username = username
-        user.first_name = first_name
-        user.last_name = last_name
-        user.email = email
-        user.save()
+        messages.success(request, "Profil muvaffaqiyatli yangilandi!")
+        return redirect('profile')
 
-    return render(request, 'app/profile.html', {'user': user})
+    return render(request, 'app/profile.html')
 
 
 def get_dashboard_stats():
