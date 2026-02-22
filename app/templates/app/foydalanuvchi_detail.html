@@ -512,92 +512,78 @@
         </div>
         
         <!-- YUTUQLAR -->
-        <div class="yutuqlar-container">
-            <div class="section-header">
-                <h2><i class="fas fa-gifts"></i> Yutuqlar tarixi</h2>
-                <span>{{ yutuqlar.count }} ta yutuq</span>
-            </div>
-            
-            {% if yutuqlar %}
-                <table class="yutuqlar-table">
-                    <thead>
-                        <tr>
-                            <th>Sovg'a</th>
-                            <th>Vaqt</th>
-                            <th>Holat</th>
-                            <th>Harakatlar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for yutuq in yutuqlar %}
-                            <tr>
-                                <td>
-                                    {% if yutuq.sovga %}
-                                        <div class="yutuq-sovga">
-                                            <div class="sovga-color" style="background: {{ yutuq.sovga.rangi }};"></div>
-                                            <div class="sovga-info">
-                                                <h4>{{ yutuq.sovga.nomi }}</h4>
-                                                <p>Katak №{{ yutuq.sovga.katak_raqami }}</p>
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <div class="yutuq-sovga">
-                                            <div class="sovga-color" style="background: #ccc;"></div>
-                                            <div class="sovga-info">
-                                                <h4>Yutuq yo'q</h4>
-                                                <p>Bo'sh katak</p>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {{ yutuq.spin_vaqti|date:"d.m.Y H:i" }}
-                                    {% if yutuq.ishlatilgan_vaqt %}
-                                        <br>
-                                        <small style="color: #666;">Ishlatilgan: {{ yutuq.ishlatilgan_vaqt|date:"d.m.Y H:i" }}</small>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if yutuq.yutib_oldingi %}
-                                        {% if yutuq.ishlatildi %}
-                                            <span class="status-badge status-used">
-                                                <i class="fas fa-check"></i> Ishlatilgan
-                                            </span>
-                                        {% else %}
-                                            <span class="status-badge status-won">
-                                                <i class="fas fa-trophy"></i> Yutildi
-                                            </span>
-                                        {% endif %}
-                                    {% else %}
-                                        <span class="status-badge status-lost">
-                                            <i class="fas fa-times"></i> Yutilmadi
-                                        </span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        {% if yutuq.yutib_oldingi and not yutuq.ishlatildi %}
-                                            <button class="action-btn btn-mark-used" onclick="markAsUsed({{ yutuq.id }})">
-                                                <i class="fas fa-check"></i> Ishlatilgan
-                                            </button>
-                                        {% endif %}
-                                        <button class="action-btn btn-edit" onclick="editYutuq({{ yutuq.id }})">
-                                            <i class="fas fa-edit"></i> Tahrirlash
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-box-open"></i>
-                    <h3>Yutuqlar topilmadi</h3>
-                    <p>Bu foydalanuvchi hali barabanni aylantirmagan.</p>
-                </div>
-            {% endif %}
+<!-- YUTUQLAR -->
+    <div class="yutuqlar-container">
+        <div class="section-header">
+            <h2><i class="fas fa-gifts"></i> Yutuqlar tarixi</h2>
+            <span>{{ baraban_spins.count }} ta aylantirish</span>
         </div>
+        
+        {% if baraban_spins %}
+            <table class="yutuqlar-table">
+                <thead>
+                    <tr>
+                        <th>Sovg'a</th>
+                        <th>Vaqt</th>
+                        <th>Holat</th>
+                        <th>Harakatlar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for spin in baraban_spins %}
+                        <tr>
+                            <td>
+                                {% if spin.sovga %}
+                                    <div class="yutuq-sovga">
+                                        <div class="sovga-color" style="background: {{ spin.sovga.rangi }};"></div>
+                                        <div class="sovga-info">
+                                            <h4>{{ spin.sovga.nomi }}</h4>
+                                            <p>Katak №{{ spin.sovga.katak_raqami }}</p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="yutuq-sovga">
+                                        <div class="sovga-color" style="background: #ccc;"></div>
+                                        <div class="sovga-info">
+                                            <h4>Yutuq yo'q</h4>
+                                            <p>Bo'sh katak</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ spin.spin_vaqti|date:"d.m.Y H:i" }}
+                            </td>
+                            <td>
+                                {% if spin.sovga %}
+                                    <span class="status-badge status-won">
+                                        <i class="fas fa-trophy"></i> Yutildi
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-lost">
+                                        <i class="fas fa-times"></i> Yutilmadi
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="alert('Uzur Notog`ri harakat !')">
+                                        <i class="fas fa-eye"></i> Ko'rinmoqda
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <h3>Yutuqlar topilmadi</h3>
+                <p>Bu foydalanuvchi hali barabanni aylantirmagan.</p>
+            </div>
+        {% endif %}
+    </div>
     </div>
     
     <!-- EDIT MODAL -->

@@ -3,339 +3,618 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boshqaruv paneli</title>
+    <title>NEON BOSHQARUV | 2K24</title>
     <style>
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
         }
 
+        /* CUSTOM FONTS */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+        /* CYBERPUNK FON ANIMATION */
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75), 0.025em 0.05em 0 rgba(0,0,255,0.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75), 0.025em 0.05em 0 rgba(0,0,255,0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75), -0.05em -0.05em 0 rgba(0,0,255,0.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75), -0.05em -0.05em 0 rgba(0,0,255,0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75), 0 -0.05em 0 rgba(0,0,255,0.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75), 0 -0.05em 0 rgba(0,0,255,0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75), -0.025em -0.05em 0 rgba(0,0,255,0.75); }
+        }
+
+        /* NEON PULSE */
+        @keyframes neonPulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.7)) 
+                        drop-shadow(0 0 15px rgba(0, 255, 255, 0.5))
+                        drop-shadow(0 0 30px rgba(0, 255, 255, 0.3));
+            }
+            50% { 
+                filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.8)) 
+                        drop-shadow(0 0 25px rgba(255, 0, 255, 0.6))
+                        drop-shadow(0 0 50px rgba(255, 0, 255, 0.4));
+            }
+        }
+
+        /* FLOATING ANIMATION */
+        @keyframes float3d {
+            0% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+            25% { transform: translateY(-15px) rotateX(2deg) rotateY(2deg); }
+            50% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+            75% { transform: translateY(15px) rotateX(-2deg) rotateY(-2deg); }
+            100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+        }
+
+        /* ROTATING BACKGROUND */
+        @keyframes rotateBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* BODY - CYBERPUNK GRADIENT */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            background: radial-gradient(circle at 0% 0%, #1a0b2e 0%, #0f0a1f 50%, #000000 100%);
+            padding: 25px;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Animatsion fon */
+        /* ANIMATED GRID LINES */
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+            animation: rotateBg 20s linear infinite;
+        }
+
+        /* FLOATING PARTICLES */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(255, 0, 255, 0.15) 0%, transparent 30%),
+                        radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.15) 0%, transparent 30%),
+                        radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.1) 0%, transparent 40%);
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Yaltiroq effektlar */
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-            100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             position: relative;
-            z-index: 1;
+            z-index: 10;
+            perspective: 1000px;
         }
 
-        /* Header */
+        /* 3D HEADER CARD */
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            animation: float 6s ease-in-out infinite;
+            background: rgba(20, 15, 40, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 30px;
+            padding: 40px 30px;
+            margin-bottom: 40px;
+            box-shadow: 
+                0 30px 50px rgba(0, 0, 0, 0.7),
+                0 0 0 1px rgba(0, 255, 255, 0.3),
+                0 0 20px rgba(0, 255, 255, 0.3),
+                inset 0 0 30px rgba(255, 0, 255, 0.2);
+            transform-style: preserve-3d;
+            transform: rotateX(2deg) rotateY(1deg);
+            transition: all 0.5s ease;
+            animation: float3d 8s ease-in-out infinite;
+        }
+
+        .header:hover {
+            box-shadow: 
+                0 40px 70px rgba(0, 0, 0, 0.9),
+                0 0 0 2px rgba(255, 0, 255, 0.5),
+                0 0 40px rgba(255, 0, 255, 0.5),
+                inset 0 0 40px rgba(0, 255, 255, 0.3);
+            border-color: rgba(255, 0, 255, 0.5);
         }
 
         .header h1 {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 3.5em;
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-align: center;
+            background-size: 200% 200%;
+            animation: rotateBg 5s ease infinite, glitch 3s infinite;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
-        .header p {
-            color: #555;
+        .user-info {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 50px;
+            padding: 18px 25px;
+            color: #fff;
             text-align: center;
-            font-size: 1.1em;
+            font-size: 1.2em;
+            letter-spacing: 1px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Asosiy sahifaga tugma */
+        .user-info::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        /* NEON BUTTON */
         .main-page-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            color: black;
             text-decoration: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 20px 0;
-            transition: all 0.3s ease;
+            padding: 18px 50px;
+            border-radius: 60px;
+            font-size: 1.4em;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-            animation: glow 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 20px #ff00ff,
+                0 0 40px #00ffff,
+                0 0 60px rgba(255, 0, 255, 0.5);
+            animation: neonPulse 2s infinite;
+        }
+
+        .main-page-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .main-page-btn:hover::before {
+            left: 100%;
         }
 
         .main-page-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 
+                0 0 30px #ff00ff,
+                0 0 60px #00ffff,
+                0 0 90px #ffff00;
         }
 
-        /* Accordion */
+        /* ACCORDION - GLASS CARDS */
         .accordion-item {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            margin-bottom: 15px;
+            background: rgba(10, 5, 20, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 25px;
+            margin-bottom: 20px;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
         .accordion-item:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: scale(1.02) translateY(-5px);
+            border-color: #ff00ff;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.7),
+                0 0 30px rgba(255, 0, 255, 0.5);
         }
 
         .accordion-btn {
             width: 100%;
-            padding: 20px 25px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 25px 30px;
+            background: linear-gradient(90deg, rgba(255, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
             color: white;
             border: none;
-            font-size: 1.2em;
-            font-weight: bold;
+            font-size: 1.4em;
+            font-weight: 700;
             text-align: left;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
             transition: all 0.3s ease;
+        }
+
+        .accordion-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .accordion-btn:hover::before {
+            opacity: 0.3;
         }
 
         .accordion-btn::after {
             content: '▼';
-            font-size: 0.8em;
-            transition: transform 0.3s ease;
+            font-size: 1em;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            transition: all 0.4s ease;
         }
 
         .accordion-btn.active::after {
             transform: rotate(180deg);
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ff00ff;
         }
 
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease;
-            background: rgba(255, 255, 255, 0.9);
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.4);
         }
 
         .accordion-content.active {
-            max-height: 800px;
+            max-height: 1000px;
         }
 
         .form-container {
-            padding: 25px;
+            padding: 35px;
         }
 
-        /* Form elementlari */
+        /* FORM STYLES */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #333;
+            margin-bottom: 10px;
+            color: #00ffff;
             font-weight: 600;
-            font-size: 0.95em;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1em;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            font-size: 1.1em;
+            color: white;
             transition: all 0.3s ease;
-            background: white;
+            backdrop-filter: blur(5px);
         }
 
         .form-control:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            border-color: #ff00ff;
+            box-shadow: 
+                0 0 0 4px rgba(255, 0, 255, 0.2),
+                0 0 30px rgba(255, 0, 255, 0.5);
+            background: rgba(0, 0, 0, 0.7);
+            transform: scale(1.02);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-style: italic;
         }
 
         .help-text {
             display: block;
-            margin-top: 5px;
-            font-size: 0.85em;
-            color: #666;
+            margin-top: 10px;
+            color: #ffff00;
+            font-size: 0.9em;
+            text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
         }
 
-        /* Toggle parol tugmasi */
+        /* NEON TOGGLE BUTTON */
         .toggle-password {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-size: 0.9em;
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.95em;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 5px;
+            margin-top: 10px;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
         }
 
         .toggle-password:hover {
+            background: #00ffff;
+            color: black;
+            box-shadow: 0 0 30px #00ffff;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
-        /* Submit tugma */
+        /* SUBMIT BUTTON - CYBER */
         .submit-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            padding: 18px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
             border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
+            border-radius: 50px;
+            color: black;
+            font-size: 1.3em;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            box-shadow: 
+                0 0 20px #ff00ff,
+                0 0 40px #00ffff;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transition: left 0.4s ease;
         }
 
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 
+                0 0 30px #ff00ff,
+                0 0 60px #00ffff,
+                0 0 90px #ffff00;
         }
 
-        /* Messages */
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        /* MESSAGES - NEON NOTIFICATIONS */
         #messages-container {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+            top: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .message {
-            padding: 15px 25px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            font-weight: 600;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            animation: slideIn 0.5s ease;
-            backdrop-filter: blur(10px);
+            padding: 20px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(15px);
+            border: 2px solid;
+            animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        @keyframes slideIn {
+        @keyframes slideInRight {
             from {
-                transform: translateX(100%);
+                transform: translateX(100%) rotate(10deg);
                 opacity: 0;
             }
             to {
-                transform: translateX(0);
+                transform: translateX(0) rotate(0);
                 opacity: 1;
             }
         }
 
         .message.success {
-            background: linear-gradient(135deg, #48c774, #00d1b2);
-            color: white;
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
         }
 
         .message.error {
-            background: linear-gradient(135deg, #f14668, #ff3860);
-            color: white;
+            background: rgba(255, 0, 0, 0.2);
+            border-color: #ff0000;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
         }
 
         .message.warning {
-            background: linear-gradient(135deg, #ffe08a, #ffdd57);
-            color: #333;
+            background: rgba(255, 255, 0, 0.2);
+            border-color: #ffff00;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.3);
         }
 
-        /* Foydalanuvchi ma'lumoti */
-        .user-info {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            color: white;
-            text-align: center;
-            font-size: 1.1em;
-            border: 1px solid rgba(255,255,255,0.2);
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 12px;
         }
 
-        /* Responsive */
+        ::-webkit-scrollbar-track {
+            background: #1a0b2e;
+            border: 1px solid #ff00ff;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+        }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             
             .main-page-btn {
-                padding: 12px 30px;
-                font-size: 1em;
+                padding: 15px 30px;
+                font-size: 1.1em;
             }
+            
+            .accordion-btn {
+                font-size: 1.1em;
+                padding: 20px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            #messages-container {
+                left: 20px;
+                right: 20px;
+            }
+        }
+
+        /* LOADING ANIMATION */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cyber-loader {
+            width: 80px;
+            height: 80px;
+            border: 5px solid transparent;
+            border-top-color: #ff00ff;
+            border-bottom-color: #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
+<!-- LOADING ANIMATION -->
+<div class="loading" id="loading">
+    <div class="cyber-loader"></div>
+</div>
+
 <div class="container">
-    <!-- Header -->
+    <!-- HEADER - NEON STYLE -->
     <div class="header">
-        <h1>✨ Boshqaruv paneli</h1>
+        <h1>⚡ NEON BOSHQARUV ⚡</h1>
         {% if user.is_authenticated %}
             <div class="user-info">
-                👤 Xush kelibsiz, <strong>{{ user.username }}</strong>!
+                <span style="color: #00ffff;">➤</span> XUSH KELIBSIZ, <strong style="color: #ff00ff;">{{ user.username|upper }}</strong> <span style="color: #00ffff;">➤</span>
             </div>
         {% else %}
-            <p>🔐 Tizimga kiring yoki ro'yxatdan o'ting</p>
+            <div class="user-info">
+                🌐 TIZIMGA KIRING YOKI RO'YXATDAN O'TING 🌐
+            </div>
         {% endif %}
     </div>
 
-    <!-- Asosiy sahifaga tugma -->
-    <div style="text-align: center;">
+    <!-- MAIN BUTTON -->
+    <div style="text-align: center; margin: 40px 0;">
         <a href="{% url 'index' %}" class="main-page-btn">
-            🏠 Asosiy sahifaga
+            🏴‍☠️ ASOSIY SAHIFA 🏴‍☠️
         </a>
     </div>
 
-    <!-- Messages -->
+    <!-- MESSAGES -->
     {% if messages %}
     <div id="messages-container">
         {% for message in messages %}
             <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
-                {{ message }}
+                ⚡ {{ message }} ⚡
             </div>
         {% endfor %}
     </div>
@@ -343,18 +622,17 @@
         setTimeout(() => {
             const messages = document.querySelectorAll('.message');
             messages.forEach(msg => {
-                msg.style.opacity = '0';
-                msg.style.transform = 'translateX(100%)';
+                msg.style.animation = 'slideOutRight 0.5s forwards';
                 setTimeout(() => msg.remove(), 500);
             });
         }, 5000);
     </script>
     {% endif %}
 
-    <!-- Ro'yxatdan o'tish -->
+    <!-- REGISTER SECTION -->
     <div class="accordion-item">
         <button class="accordion-btn" id="register-btn">
-            📝 Ro'yxatdan o'tish
+            <span>📟 RO'YXATDAN O'TISH 📟</span>
         </button>
         <div class="accordion-content" id="register-content">
             <div class="form-container">
@@ -362,9 +640,7 @@
                     {% csrf_token %}
                     
                     <div class="form-group">
-                        <label for="{{ register_form.username.id_for_label }}">
-                            {{ register_form.username.label }}
-                        </label>
+                        <label>⚡ {{ register_form.username.label }} ⚡</label>
                         {{ register_form.username }}
                         {% if register_form.username.help_text %}
                             <small class="help-text">{{ register_form.username.help_text|safe }}</small>
@@ -372,39 +648,35 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="{{ register_form.password1.id_for_label }}">
-                            {{ register_form.password1.label }}
-                        </label>
+                        <label>🔒 {{ register_form.password1.label }} 🔒</label>
                         {{ register_form.password1 }}
-                        <button type="button" class="toggle-password" data-target="{{ register_form.password1.id_for_label }}">👁️ Ko'rsat</button>
+                        <button type="button" class="toggle-password" data-target="{{ register_form.password1.id_for_label }}">👁️ KO'RSAT</button>
                         {% if register_form.password1.help_text %}
                             <small class="help-text">{{ register_form.password1.help_text|safe }}</small>
                         {% endif %}
                     </div>
 
                     <div class="form-group">
-                        <label for="{{ register_form.password2.id_for_label }}">
-                            {{ register_form.password2.label }}
-                        </label>
+                        <label>🔐 {{ register_form.password2.label }} 🔐</label>
                         {{ register_form.password2 }}
-                        <button type="button" class="toggle-password" data-target="{{ register_form.password2.id_for_label }}">👁️ Ko'rsat</button>
+                        <button type="button" class="toggle-password" data-target="{{ register_form.password2.id_for_label }}">👁️ KO'RSAT</button>
                         {% if register_form.password2.help_text %}
                             <small class="help-text">{{ register_form.password2.help_text|safe }}</small>
                         {% endif %}
                     </div>
 
                     <button type="submit" name="action" value="register" class="submit-btn">
-                        ✨ Ro'yxatdan o'tish
+                        🚀 RO'YXATDAN O'TISH 🚀
                     </button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Kirish -->
+    <!-- LOGIN SECTION -->
     <div class="accordion-item">
         <button class="accordion-btn" id="login-btn">
-            🔑 Tizimga kirish
+            <span>🔑 TIZIMGA KIRISH 🔑</span>
         </button>
         <div class="accordion-content" id="login-content">
             <div class="form-container">
@@ -412,41 +684,39 @@
                     {% csrf_token %}
                     
                     <div class="form-group">
-                        <label for="{{ login_form.username.id_for_label }}">
-                            {{ login_form.username.label }}
-                        </label>
+                        <label>⚡ {{ login_form.username.label }} ⚡</label>
                         {{ login_form.username }}
                     </div>
 
                     <div class="form-group">
-                        <label for="{{ login_form.password.id_for_label }}">
-                            {{ login_form.password.label }}
-                        </label>
+                        <label>🔒 {{ login_form.password.label }} 🔒</label>
                         {{ login_form.password }}
-                        <button type="button" class="toggle-password" data-target="{{ login_form.password.id_for_label }}">👁️ Ko'rsat</button>
+                        <button type="button" class="toggle-password" data-target="{{ login_form.password.id_for_label }}">👁️ KO'RSAT</button>
                     </div>
 
                     <button type="submit" name="action" value="login" class="submit-btn">
-                        🚀 Kirish
+                        🎯 KIRISH 🎯
                     </button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Chiqish (faqat login bo'lsa) -->
+    <!-- LOGOUT SECTION -->
     {% if user.is_authenticated %}
     <div class="accordion-item">
         <button class="accordion-btn">
-            👋 Tizimdan chiqish
+            <span>👋 TIZIMDAN CHIQISH 👋</span>
         </button>
         <div class="accordion-content">
             <div class="form-container">
                 <form method="post" action="{% url 'boshqaruv' %}">
                     {% csrf_token %}
-                    <p style="margin-bottom: 20px; color: #333;">Haqiqatan ham tizimdan chiqmoqchimisiz?</p>
-                    <button type="submit" name="action" value="logout" class="submit-btn" style="background: linear-gradient(135deg, #f14668, #ff3860);">
-                        👋 Chiqish
+                    <p style="color: #fff; margin-bottom: 25px; text-align: center; font-size: 1.2em; text-shadow: 0 0 10px #ff00ff;">
+                        ⚡ HAQIQATAN CHIQMOQCHIMISIZ? ⚡
+                    </p>
+                    <button type="submit" name="action" value="logout" class="submit-btn" style="background: linear-gradient(45deg, #ff0000, #ff00ff);">
+                        💀 CHIQISH 💀
                     </button>
                 </form>
             </div>
@@ -454,30 +724,47 @@
     </div>
     {% endif %}
 
+    <!-- NEON DECORATION -->
+    <div style="position: fixed; bottom: 20px; right: 20px; color: rgba(255,255,255,0.3); font-size: 12px; z-index: 9999;">
+        ⚡ CYBERPUNK EDITION 2K24 ⚡
+    </div>
 </div>
 
 <script>
-    // Accordion funksiyasi
+    // HIDE LOADING
+    window.addEventListener('load', function() {
+        document.getElementById('loading').classList.add('hidden');
+    });
+
+    // ACCORDION
     document.querySelectorAll('.accordion-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Boshqa accordionlarni yopish
-            if (!this.classList.contains('active')) {
-                document.querySelectorAll('.accordion-btn').forEach(b => {
-                    b.classList.remove('active');
-                });
-                document.querySelectorAll('.accordion-content').forEach(c => {
-                    c.classList.remove('active');
-                });
-            }
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
             
-            // Hozirgini ochish/yopish
+            // Close others
+            document.querySelectorAll('.accordion-btn').forEach(b => {
+                if (b !== this) {
+                    b.classList.remove('active');
+                    b.nextElementSibling.classList.remove('active');
+                }
+            });
+            
+            // Toggle current
             this.classList.toggle('active');
             const content = this.nextElementSibling;
             content.classList.toggle('active');
+            
+            // Add neon effect
+            if (this.classList.contains('active')) {
+                this.style.animation = 'neonPulse 1s';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 1000);
+            }
         });
     });
 
-    // Parol ko'rsatish/yashirish
+    // PASSWORD TOGGLE
     document.querySelectorAll('.toggle-password').forEach(btn => {
         btn.addEventListener('click', function() {
             const targetId = this.getAttribute('data-target');
@@ -485,35 +772,111 @@
             
             if (input.type === 'password') {
                 input.type = 'text';
-                this.textContent = '🔒 Yashirish';
+                this.innerHTML = '🔒 YASHIRISH';
+                this.style.background = '#ff00ff';
+                this.style.color = 'black';
             } else {
                 input.type = 'password';
-                this.textContent = '👁️ Ko\'rsat';
+                this.innerHTML = '👁️ KO\'RSAT';
+                this.style.background = 'transparent';
+                this.style.color = '#00ffff';
+            }
+            
+            // Add flash effect
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+
+    // HASH NAVIGATION
+    document.addEventListener('DOMContentLoaded', function() {
+        const hash = window.location.hash;
+        if (hash === '#register') {
+            setTimeout(() => {
+                document.getElementById('register-btn').click();
+            }, 500);
+        } else if (hash === '#login') {
+            setTimeout(() => {
+                document.getElementById('login-btn').click();
+            }, 500);
+        }
+    });
+
+    // INPUT ANIMATIONS
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateX(10px)';
+            this.parentElement.style.transition = 'all 0.3s ease';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateX(0)';
+        });
+    });
+
+    // PAROL KUCHE CHECK (REAL-TIME)
+    document.querySelectorAll('input[type="password"]').forEach(input => {
+        input.addEventListener('input', function() {
+            const val = this.value;
+            if (val.length > 0 && val.length < 8) {
+                this.style.borderColor = '#ff0000';
+                this.style.boxShadow = '0 0 20px #ff0000';
+            } else if (val.length >= 8) {
+                this.style.borderColor = '#00ff00';
+                this.style.boxShadow = '0 0 20px #00ff00';
+            } else {
+                this.style.borderColor = '#00ffff';
+                this.style.boxShadow = '0 0 20px #00ffff';
             }
         });
     });
 
-    // Hash orqali accordion ochish
-    document.addEventListener('DOMContentLoaded', function() {
-        const hash = window.location.hash;
-        if (hash === '#register') {
-            document.getElementById('register-btn').click();
-        } else if (hash === '#login') {
-            document.getElementById('login-btn').click();
-        }
+    // MOUSE MOVE PARALLAX
+    document.addEventListener('mousemove', function(e) {
+        const moveX = (e.clientX / window.innerWidth - 0.5) * 20;
+        const moveY = (e.clientY / window.innerHeight - 0.5) * 20;
+        
+        document.querySelector('.header').style.transform = 
+            `rotateX(${moveY}deg) rotateY(${moveX}deg)`;
     });
 
-    // Inputlarga animatsiya
-    document.querySelectorAll('.form-control').forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.style.transform = 'scale(1.02)';
-        });
-        
-        input.addEventListener('blur', function() {
-            this.parentElement.style.transform = 'scale(1)';
-        });
-    });
+    // RANDOM NEON FLICKER
+    setInterval(() => {
+        const randomItem = Math.floor(Math.random() * document.querySelectorAll('.accordion-item').length);
+        const item = document.querySelectorAll('.accordion-item')[randomItem];
+        if (item) {
+            item.style.boxShadow = '0 0 50px #ff00ff, 0 0 100px #00ffff';
+            setTimeout(() => {
+                item.style.boxShadow = '';
+            }, 200);
+        }
+    }, 3000);
 </script>
+
+<style>
+    /* ADDITIONAL ANIMATIONS */
+    @keyframes slideOutRight {
+        to {
+            transform: translateX(100%) rotate(10deg);
+            opacity: 0;
+        }
+    }
+
+    /* SELECTION COLOR */
+    ::selection {
+        background: #ff00ff;
+        color: black;
+        text-shadow: none;
+    }
+
+    /* FOCUS VISIBLE */
+    :focus-visible {
+        outline: 3px solid #ff00ff;
+        outline-offset: 3px;
+    }
+</style>
 
 </body>
 </html>

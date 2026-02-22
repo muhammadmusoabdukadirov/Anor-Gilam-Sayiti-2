@@ -161,52 +161,57 @@ def delete_order(request, order_id):
 # -------------------------SOZLAMALAR--------------------------------------------
 
 def boshqaruv(request):
+
     register_form = SimpleUserCreationForm()
     login_form = AuthenticationForm()
-    
-    if request.method == 'POST':
-        action = request.POST.get('action')
-        
-        # ✅ SODDALASHTIRILGAN REGISTRATSIYA
-        if action == 'register':
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        # ================= REGISTER =================
+        if action == "register":
             register_form = SimpleUserCreationForm(request.POST)
+            login_form = AuthenticationForm()
+
             if register_form.is_valid():
                 user = register_form.save()
                 login(request, user)
-                messages.success(request, f"Xush kelibsiz, {user.username}! 🎉")
-                return redirect('boshqaruv')
-            else:
-                for field, errors in register_form.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{error}")
-        
-        # LOGIN
-        elif action == 'login':
-            login_form = AuthenticationForm(request, data=request.POST)
-            if login_form.is_valid():
-                username = login_form.cleaned_data.get('username')
-                password = login_form.cleaned_data.get('password')
-                user = authenticate(username=username, password=password)
-                if user is not None:
-                    login(request, user)
-                    messages.success(request, f"Xush kelibsiz, {username}! 👋")
-                    return redirect('boshqaruv')
-            else:
-                messages.error(request, "Login yoki parol xato!")
-        
-        # LOGOUT
-        elif action == 'logout':
-            logout(request)
-            messages.success(request, "Xayr! Tizimdan chiqdingiz. 👋")
-            return redirect('boshqaruv')
-    
-    context = {
-        'register_form': register_form,
-        'login_form': login_form,
-        'user': request.user,
-    }
-    return render(request, 'app/boshqaruv.html', context)
 
+                messages.success(request, f"Xush kelibsiz, {user.username}! 🎉")
+                return redirect("boshqaruv")
+
+            else:
+                for error in register_form.errors.values():
+                    messages.error(request, error)
+
+        # ================= LOGIN =================
+        elif action == "login":
+            login_form = AuthenticationForm(request, data=request.POST)
+            register_form = SimpleUserCreationForm()
+
+            if login_form.is_valid():
+                user = login_form.get_user()
+                login(request, user)
+
+                messages.success(request, f"Xush kelibsiz, {user.username}! 👋")
+                return redirect("boshqaruv")
+
+            else:
+                for error in login_form.errors.values():
+                    messages.error(request, error)
+
+        # ================= LOGOUT =================
+        elif action == "logout":
+            logout(request)
+            messages.success(request, "Tizimdan chiqdingiz 👋")
+            return redirect("boshqaruv")
+
+    context = {
+        "register_form": register_form,
+        "login_form": login_form,
+    }
+
+    return render(request, "app/boshqaruv.html", context)
 
 @login_required
 def sozlamalar(request):
@@ -245,6 +250,7 @@ def sozlamalar(request):
         'carpets': CarpetType.objects.all(),
     }
     return render(request, 'app/sozlamalar.html', context)
+
 @login_required(login_url='boshqaruv')
 def profile_view(request):
     user = request.user

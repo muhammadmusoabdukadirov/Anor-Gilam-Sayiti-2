@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/panel.css'%}">
     <link rel="stylesheet" href="{% static 'css/rasm.css'%}">
     <link rel="stylesheet" href="{% static 'css/message.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
     /* VIDEO VA SURATLAR GALEREYASI UCHUN STILLAR */
     /* REKLAMA BANNERI */
@@ -1061,7 +1062,91 @@
         text-decoration:none;
         font-weight:600;
     }
+    .profile-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 80px;
+        font-size: 18px;
+        font-weight: 600;
+        text-decoration: none;
+        color: white;
+        border-radius: 40px;
+        background: linear-gradient(135deg, #b30000, #ff1a1a);
+        box-shadow: 0 0 15px rgba(179,0,0,0.6);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
 
+    .profile-btn i {
+        font-size: 22px;
+        transition: transform 0.3s ease;
+    }
+
+    .profile-btn:hover {
+        background: linear-gradient(135deg, #ff1a1a, #ff4d4d);
+        box-shadow: 0 0 25px rgba(255,0,0,0.9);
+        transform: translateY(-3px);
+    }
+
+    .profile-btn:hover i {
+        transform: rotate(15deg) scale(1.2);
+    }
+
+    /* ripple effect */
+    .profile-btn::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        background: rgba(255,255,255,0.4);
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.4s ease, height 0.4s ease;
+    }
+
+    .profile-btn:active::after {
+        width: 250px;
+        height: 250px;
+    }
+    .button-group-title{
+        font-size: 22px;
+        font-weight: 700;
+        color: #b30000;
+        border-left: 6px solid #ff1a1a;
+        padding-left: 12px;
+        margin-bottom: 15px;
+        text-shadow: 0 0 8px rgba(255,0,0,0.3);
+    }
+    .anor-logo {
+        font-family: 'Arial Black', sans-serif; /* yoki qalin, brendga mos font */
+        font-size: 36px;
+        font-weight: 900;
+        background: linear-gradient(135deg, #b30000, #ff1a1a); /* Anor qizil gradient */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 8px rgba(179,0,0,0.6);
+        transition: all 0.3s ease;
+    }
+
+    .anor-logo:hover {
+        letter-spacing: 4px;
+        text-shadow: 2px 2px 12px rgba(255,26,26,0.8);
+        transform: scale(1.05);
+    }
+
+    .anor-tagline {
+        font-family: 'Arial', sans-serif;
+        font-size: 16px;
+        color: #b30000;
+        margin-top: 5px;
+        letter-spacing: 1px;
+    }
 </style>
 
 </head>
@@ -1090,36 +1175,16 @@
         <div class="theme-indicator" id="themeIndicator">
             <span id="themeText">🌞</span>
         </div>
-        <h1><i class="fas fa-rug logo"></i> ANOR GILAM YUVISH</h1>
-        <p>Yuksak sifat va ishonch - 10 yildan ortiq tajriba</p>
+        <h1 class="anor-logo">
+            ANOR GILAM YUVISH
+        </h1>
+        <p>SIZ UCHUN ENG QULAY ANOR GILAM YUVISH</p>
     </header>
 
     <!-- VIDEO VA SURATLAR GALEREYASI -->
     <div class="section">
         <h2><i class="fas fa-photo-video"></i> Video va Suratlar Galereyasi</h2>
         <p>Gilam yuvish jarayonidan video va suratlar:</p>
-
-        <!-- 1. REKLAMA BANNERI (YUQORI QISMI) -->
-        <div class="ad-banner" style="background: {{ ad.color }}">
-
-            <div class="ad-text">
-                <h3>{{ ad.title }}</h3>
-                <p>{{ ad.description }}</p>
-            </div>
-
-            {% if ad.ad_type == "image" and ad.image %}
-                <a href="{{ ad.image.url }}" target="_blank" class="ad-link">
-                    📷 Rasmni ko‘rish
-                </a>
-            {% endif %}
-
-            {% if ad.ad_type == "video" and ad.video %}
-                <a href="{{ ad.video.url }}" target="_blank" class="ad-link">
-                    ▶ Videoni ko‘rish
-                </a>
-            {% endif %}
-
-        </div>
 
 
         <!-- 2. ASOSIY KONTEYNER (2 QISMDAN) -->
@@ -1311,7 +1376,10 @@
 <!-- Right Side - Admin Panel -->
 <div class="admin-panel">
     <div class="button-group">
-    <h3 class="button-group-title"><i class="fas fa-th-large"></i> PROFIL </h3>
+    <a href="{% url 'profile' %}" class="profile-btn">
+        <i class="fas fa-user-circle"></i>
+        <span>Profil</span>
+    </a>
     <ul class="admin-menu">
         <li>
             {% if user.is_authenticated %}
@@ -1615,19 +1683,27 @@
             opacity: 0;
         }
     }
-    `;
-    document.head.appendChild(style);
+        `;
+        document.head.appendChild(style);
 
-    @keyframes glow{
-    0%{box-shadow:0 0 5px white;}
-    50%{box-shadow:0 0 20px yellow;}
-    100%{box-shadow:0 0 5px white;}
-    }
+        @keyframes glow{
+        0%{box-shadow:0 0 5px white;}
+        50%{box-shadow:0 0 20px yellow;}
+        100%{box-shadow:0 0 5px white;}
+        }
 
-    .ad-banner{
-        animation: glow 2s infinite;
-    }
+        .ad-banner{
+            animation: glow 2s infinite;
+        }
+        document.querySelectorAll(".profile-btn").forEach(btn => {
+        btn.addEventListener("mouseenter", () => {
+            btn.style.letterSpacing = "1px";
+        });
 
+        btn.addEventListener("mouseleave", () => {
+            btn.style.letterSpacing = "0px";
+        });
+    });
 </script>
 
 

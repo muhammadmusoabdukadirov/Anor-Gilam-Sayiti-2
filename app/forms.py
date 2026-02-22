@@ -56,11 +56,24 @@ class SimpleUserCreationForm(UserCreationForm):
             raise forms.ValidationError("Parol kamida 8 ta belgidan iborat bo'lishi kerak!")
         return password
 
-    def clean_password2(self):
-        password2 = self.cleaned_data.get('password2')
-        if ' ' in password2:
-            raise forms.ValidationError("Parolda bo'sh joy bo'lmasligi kerak!")
-        return password2
+    def clean(self):
+        cleaned_data = super().clean()
+
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        if password1 and password2:
+
+            if " " in password1:
+                raise forms.ValidationError("Parolda bo'sh joy bo'lmasligi kerak!")
+
+            if len(password1) < 8:
+                raise forms.ValidationError("Parol kamida 8 ta belgidan iborat bo'lishi kerak!")
+
+            if password1 != password2:
+                raise forms.ValidationError("Parollar mos emas!")
+
+        return cleaned_data
 
 
 class MediaForm(forms.ModelForm):
